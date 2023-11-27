@@ -17,7 +17,7 @@ import { CatalogoModule } from './catalogo/catalogo.module';
     }),
     CatalogoModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
