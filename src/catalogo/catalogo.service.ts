@@ -53,10 +53,7 @@ export class CatalogoService {
     return registro;
   }
 
-  update(
-    id: string,
-    updateCatalogoDto: UpdateCatalogoDto,
-  ): Promise<CatalogoDto> {
-    throw new Error('Method not implemented.');
+  update(id: string, updateCatalogoDto: UpdateCatalogoDto) {
+    this.catalogoModel.findByIdAndUpdate(id, updateCatalogoDto);
   }
 }

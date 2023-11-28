@@ -107,8 +107,8 @@ export class CatalogoController {
   update(
     @Param('id') id: string,
     @Body() updateCatalogoDto: UpdateCatalogoDto,
-  ): Promise<CatalogoDto> {
-    return this.service.update(id, updateCatalogoDto);
+  ) {
+    this.service.update(id, updateCatalogoDto);
   }
 
   @ApiOperation({ summary: 'Incluir novo registro' })
