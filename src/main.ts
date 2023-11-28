@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import * as nocache from 'nocache';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { ValidationPipe } from '@nestjs/common';
 
 const checkEnvironment = (configService: ConfigService) => {
   const requiredEnvVars = [
@@ -35,6 +36,8 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.use(nocache());
+
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   app.enableCors({
     origin: configService.get<string>('CLIENT_ORIGIN_URL'),

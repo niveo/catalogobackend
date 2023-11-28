@@ -17,10 +17,10 @@ export class CatalogoDto {
   })
   ativo: boolean = false;
 
-  @ApiProperty({
+ /* @ApiProperty({
     type: [CreateCatalogoPaginaDto],
     isArray: true,
     required: true,
   })
-  paginas: CreateCatalogoPaginaDto[];
+  paginas: CreateCatalogoPaginaDto[];*/
 }

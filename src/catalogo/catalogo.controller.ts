@@ -3,10 +3,12 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
+  NotFoundException,
   Post,
   Put,
-  UseGuards,
+  Query,
+  InternalServerErrorException,
+  Param,
 } from '@nestjs/common';
 import { CatalogoService } from './catalogo.service';
 import {
@@ -15,7 +17,6 @@ import {
   ApiCreatedResponse,
   ApiExtraModels,
   ApiNotImplementedResponse,
-  ApiOAuth2,
   ApiOperation,
   ApiParam,
   ApiProduces,
@@ -25,11 +26,12 @@ import {
 } from '@nestjs/swagger';
 import { CreateCatalogoDto } from './model/dto/create-catalogo.dto';
 import { UpdateCatalogoDto } from './model/dto/update-catalogo.dto';
-import { PaginatedDto } from '../model/dto/paginate.dto';
 import { CatalogoDto } from './model/dto/catalog.dto';
 import { ApiPaginatedResponse } from '../common/decorators/api-pagination-response';
-import { MediaType } from '../common/media-type';
-import { AuthorizationGuard } from '../authorization/authorization.guard';
+import { PageOptionsDto } from '../model/dtos/page-options.dto';
+import { PageDto } from '../model/dtos/page.dto';
+import { MediaType } from '../constants/media-type';
+import { RegistroNaoLocalizadoError } from '../common/exceptions/registro-nao-localizado.error';
 
 //@ApiOAuth2(['pets:write'])
 //@UseGuards(AuthorizationGuard)
@@ -37,17 +39,20 @@ import { AuthorizationGuard } from '../authorization/authorization.guard';
 @ApiNotImplementedResponse({ description: 'Classe não implementada' })
 @ApiTags('catalogo')
 @Controller('catalogo')
-@ApiExtraModels(PaginatedDto)
+@ApiExtraModels(PageDto)
 @ApiExtraModels(CatalogoDto)
 export class CatalogoController {
   constructor(private readonly service: CatalogoService) {}
 
   @ApiPaginatedResponse(CatalogoDto)
   @ApiProduces(MediaType.APPLICATION_JSON)
+  @ApiConsumes(MediaType.APPLICATION_JSON)
   @ApiOperation({ summary: 'Carregar registros paginados' })
   @Get()
-  getAll(): Promise<PaginatedDto<CatalogoDto>> {
-    return this.service.getAll();
+  getAll(
+    @Query() pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<CatalogoDto>> {
+    return this.service.getAll(pageOptionsDto);
   }
 
   @ApiOperation({ summary: 'Carregar registro por id' })
@@ -60,7 +65,14 @@ export class CatalogoController {
   })
   @Get(':id')
   async getId(@Param('id') id: string): Promise<CatalogoDto> {
-    return this.service.getId(id);
+    try {
+      return await this.service.getId(id);
+    } catch (e) {
+      console.error(e);
+      if (e instanceof RegistroNaoLocalizadoError)
+        throw new NotFoundException();
+      else throw new InternalServerErrorException();
+    }
   }
 
   @ApiOperation({ summary: 'Remover registro por id' })
@@ -73,7 +85,14 @@ export class CatalogoController {
   })
   @Delete(':id')
   async deleteId(@Param('id') id: string) {
-    this.service.deleteId(id);
+    try {
+      return await this.service.deleteId(id);
+    } catch (e) {
+      console.error(e);
+      if (e instanceof RegistroNaoLocalizadoError)
+        throw new NotFoundException(e.message);
+      else throw new InternalServerErrorException();
+    }
   }
 
   @ApiOperation({ summary: 'Atualizar registro por id' })
