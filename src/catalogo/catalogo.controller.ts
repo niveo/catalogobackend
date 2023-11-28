@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { CatalogoService } from './catalogo.service';
 import {
@@ -14,22 +15,28 @@ import {
   ApiCreatedResponse,
   ApiExtraModels,
   ApiNotImplementedResponse,
+  ApiOAuth2,
   ApiOperation,
   ApiParam,
   ApiProduces,
   ApiResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { CreateCatalogoDto } from './model/dto/create-catalogo.dto';
 import { UpdateCatalogoDto } from './model/dto/update-catalogo.dto';
 import { PaginatedDto } from '../model/dto/paginate.dto';
 import { CatalogoDto } from './model/dto/catalog.dto';
-import { ApiPaginatedResponse } from '../common/decorator/api-pagination-response';
+import { ApiPaginatedResponse } from '../common/decorators/api-pagination-response';
 import { MediaType } from '../common/media-type';
+import { AuthorizationGuard } from '../authorization/authorization.guard';
 
+//@ApiOAuth2(['pets:write'])
+//@UseGuards(AuthorizationGuard)
+@ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiNotImplementedResponse({ description: 'Classe não implementada' })
 @ApiTags('catalogo')
-@Controller('api/catalogo')
+@Controller('catalogo')
 @ApiExtraModels(PaginatedDto)
 @ApiExtraModels(CatalogoDto)
 export class CatalogoController {
