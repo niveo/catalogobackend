@@ -10,7 +10,7 @@ import {
   InternalServerErrorException,
   Param,
 } from '@nestjs/common';
-import { CatalogoService } from './catalogo.service';
+import { CatalogoService } from './services/catalogo.service';
 import {
   ApiBody,
   ApiConsumes,

@@ -6,7 +6,7 @@ export type CatalogoPaginaMapeamentoDocument =
 
 @Schema({ collection: 'catalogo_pagina_mapeamento', timestamps: true })
 export class CatalogoPaginaMapeamento {
-  _id: mongoose.Schema.Types.ObjectId;
+  _id?: mongoose.Schema.Types.ObjectId;
   @Prop()
   inicialPosicalX: number;
   @Prop()

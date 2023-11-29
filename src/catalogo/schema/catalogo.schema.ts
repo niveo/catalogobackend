@@ -6,7 +6,7 @@ export type CatalogoDocument = HydratedDocument<Catalogo>;
 
 @Schema({ collection: 'catalogo', timestamps: true })
 export class Catalogo {
-  _id: mongoose.Schema.Types.ObjectId;
+  _id?: mongoose.Schema.Types.ObjectId;
 
   @Prop()
   descricao: string;
@@ -22,7 +22,7 @@ export class Catalogo {
       },
     ],
   })
-  paginas: CatalogoPagina[];
+  paginas?: CatalogoPagina[] = [];
 }
 
 export const CatalogoSchema = SchemaFactory.createForClass(Catalogo);
