@@ -10,7 +10,6 @@ import {
   InternalServerErrorException,
   Param,
 } from '@nestjs/common';
-import { CatalogoService } from './services/catalogo.service';
 import {
   ApiBody,
   ApiConsumes,
@@ -24,15 +23,18 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { CreateCatalogoDto } from './model/dto/create-catalogo.dto';
-import { UpdateCatalogoDto } from './model/dto/update-catalogo.dto';
-import { CatalogoDto } from './model/dto/catalog.dto';
-import { ApiPaginatedResponse } from '../common/decorators/api-pagination-response';
-import { PageOptionsDto } from '../model/dtos/page-options.dto';
-import { PageDto } from '../model/dtos/page.dto';
-import { MediaType } from '../constants/media-type';
-import { RegistroNaoLocalizadoError } from '../common/exceptions/registro-nao-localizado.error';
-
+import { PageDto, PageOptionsDto } from '@dtos';
+import {
+  CatalogoDto,
+  CreateCatalogoDto,
+  UpdateCatalogoDto,
+} from '../models/dtos';
+import { CatalogoService } from '../services/catalogo.service';
+import {
+  ApiPaginatedResponse,
+  RegistroNaoLocalizadoError,
+  MediaType,
+} from '@common';
 //@ApiOAuth2(['pets:write'])
 //@UseGuards(AuthorizationGuard)
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
