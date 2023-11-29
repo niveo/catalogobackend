@@ -75,6 +75,12 @@ describe('CatalogoController', () => {
       const resgistros = await catalogoController.getAll();
       expect(resgistros).toHaveLength(1);
     });
+
+    it('Deve retornar a descrição do catalogo"', async () => {
+      const { _id } = await catalogoController.create(CatalogoDtoStub());
+      const { descricao } = await catalogoController.getId(String(_id));
+      expect(descricao).toEqual(CatalogoDtoStub().descricao);
+    });
   });
 
   describe('Remover Catalogo', () => {

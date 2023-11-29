@@ -6,5 +6,5 @@ export class CreateCatalogoPaginaDto extends PartialType(CatalogoPaginaDto) {
     type: String,
     readOnly: true,
   })
-  catalogoId: string;
+  catalogoID: string;
 }

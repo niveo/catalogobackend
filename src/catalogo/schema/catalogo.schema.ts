@@ -22,7 +22,7 @@ export class Catalogo {
       },
     ],
   })
-  paginas?: CatalogoPagina[] = [];
+  paginas?: CatalogoPagina[];
 }
 
 export const CatalogoSchema = SchemaFactory.createForClass(Catalogo);

@@ -28,7 +28,7 @@ import {
   UpdateCatalogoPaginaDto,
   CatalogoPaginaDto,
 } from '../dtos';
-import { MediaType, RegistroNaoLocalizadoError } from 'common';
+import { MediaType, RegistroNaoLocalizadoError } from '../../common';
 
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiTags('catalogoPagina')

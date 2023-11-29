@@ -8,18 +8,22 @@ import {
   UpdateCatalogoPaginaDto,
 } from '../dtos';
 import { RegistroNaoLocalizadoError } from '../../common';
+import { CatalogoService } from './catalogo.service';
 
 @Injectable()
 export class CatalogoPaginaService {
   constructor(
     @InjectModel(CatalogoPagina.name)
     private readonly model: Model<CatalogoPagina>,
+
+    private readonly catalogoService: CatalogoService,
   ) {}
 
-  async getAll(idCatalogo: string): Promise<CatalogoPaginaDto[]> {
-    const query = this.model.find({ catalogo: idCatalogo });
-    const entities = await query.exec();
-    return entities;
+  async getAll(id: string): Promise<CatalogoPaginaDto[]> {
+    const paginas = await this.catalogoService.getIdWithPaginas(id);
+    return this.model.find({
+      _id: { $in: paginas },
+    });
   }
 
   create(
@@ -40,8 +44,11 @@ export class CatalogoPaginaService {
     return registro;
   }
 
-  async update(id: string, updateCatalogoDto: UpdateCatalogoPaginaDto) {
-    await this.model.findByIdAndUpdate(id, updateCatalogoDto, {
+  async update(
+    id: string,
+    updateCatalogoDto: UpdateCatalogoPaginaDto,
+  ): Promise<CatalogoPaginaDto> {
+    return await this.model.findByIdAndUpdate(id, updateCatalogoDto, {
       returnDocument: 'after',
     });
   }

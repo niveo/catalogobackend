@@ -7,7 +7,7 @@ import {
   CreateCatalogoPaginaMapeamentoDto,
   UpdateCatalogoPaginaMapeamentoDto,
 } from '../dtos';
-import { RegistroNaoLocalizadoError } from 'common';
+import { RegistroNaoLocalizadoError } from '../../common';
 
 @Injectable()
 export class CatalogoPaginaMapeamentoService {

@@ -27,8 +27,8 @@ import {
   UpdateCatalogoPaginaMapeamentoDto,
   CatalogoPaginaMapeamentoDto,
 } from '../dtos';
-import { MediaType, RegistroNaoLocalizadoError } from 'common';
-import { CatalogoPaginaMapeamentoService } from 'catalogo/services/catalogo-pagina-mapeamento.service';
+import { MediaType, RegistroNaoLocalizadoError } from '../../common';
+import { CatalogoPaginaMapeamentoService } from '../../catalogo/services/catalogo-pagina-mapeamento.service';
 
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiTags('catalogoPaginaMapeamento')

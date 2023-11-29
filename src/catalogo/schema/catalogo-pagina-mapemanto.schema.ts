@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { CatalogoPagina } from './catalogo-pagina.schema';
 
 export type CatalogoPaginaMapeamentoDocument =
   HydratedDocument<CatalogoPaginaMapeamento>;
@@ -8,16 +7,6 @@ export type CatalogoPaginaMapeamentoDocument =
 @Schema({ collection: 'catalogo_pagina_mapeamento', timestamps: true })
 export class CatalogoPaginaMapeamento {
   _id?: mongoose.Schema.Types.ObjectId;
-
-  @Prop({
-    type: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'CatalogoPagina',
-      },
-    ],
-  })
-  catalogoPagina?: CatalogoPagina;
 
   @Prop()
   inicialPosicalX: number;

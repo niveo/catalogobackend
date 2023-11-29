@@ -27,6 +27,12 @@ export class CatalogoService {
     return registro;
   }
 
+  async getIdWithPaginas(id: string): Promise<any[]> {
+    const registro = await this.model.findById(id).select('paginas').exec();
+    if (!registro) throw new RegistroNaoLocalizadoError();
+    return registro.paginas?.map((m) => m._id);
+  }
+
   async deleteId(id: string): Promise<CatalogoDto> {
     const registro = await this.model.findByIdAndDelete(id);
     if (!registro) throw new RegistroNaoLocalizadoError();
