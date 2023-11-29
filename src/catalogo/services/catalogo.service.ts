@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Catalogo } from '../schema/catalogo.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateCatalogoDto, UpdateCatalogoDto, CatalogoDto } from '../dtos'; 
-import { RegistroNaoLocalizadoError } from 'common';
+import { CreateCatalogoDto, UpdateCatalogoDto, CatalogoDto } from '../dtos';
+import { RegistroNaoLocalizadoError } from '../../common';
 
 @Injectable()
 export class CatalogoService {
@@ -27,13 +27,18 @@ export class CatalogoService {
     return registro;
   }
 
-  async deleteId(id: string): Promise<any> {
+  async deleteId(id: string): Promise<CatalogoDto> {
     const registro = await this.model.findByIdAndDelete(id);
     if (!registro) throw new RegistroNaoLocalizadoError();
     return registro;
   }
 
-  async update(id: string, updateCatalogoDto: UpdateCatalogoDto) {
-    await this.model.findByIdAndUpdate(id, updateCatalogoDto);
+  async update(
+    id: string,
+    updateCatalogoDto: UpdateCatalogoDto,
+  ): Promise<CatalogoDto> {
+    return await this.model.findByIdAndUpdate(id, updateCatalogoDto, {
+      returnDocument: 'after',
+    });
   }
 }

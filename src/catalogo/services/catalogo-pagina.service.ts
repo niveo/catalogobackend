@@ -7,7 +7,7 @@ import {
   CreateCatalogoPaginaDto,
   UpdateCatalogoPaginaDto,
 } from '../dtos';
-import { RegistroNaoLocalizadoError } from 'common';
+import { RegistroNaoLocalizadoError } from '../../common';
 
 @Injectable()
 export class CatalogoPaginaService {
@@ -41,6 +41,8 @@ export class CatalogoPaginaService {
   }
 
   async update(id: string, updateCatalogoDto: UpdateCatalogoPaginaDto) {
-    await this.model.findByIdAndUpdate(id, updateCatalogoDto);
+    await this.model.findByIdAndUpdate(id, updateCatalogoDto, {
+      returnDocument: 'after',
+    });
   }
 }

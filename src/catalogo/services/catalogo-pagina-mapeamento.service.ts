@@ -46,6 +46,8 @@ export class CatalogoPaginaMapeamentoService {
     id: string,
     updateCatalogoDto: UpdateCatalogoPaginaMapeamentoDto,
   ) {
-    await this.model.findByIdAndUpdate(id, updateCatalogoDto);
+    await this.model.findByIdAndUpdate(id, updateCatalogoDto, {
+      returnDocument: 'after',
+    });
   }
 }

@@ -22,7 +22,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { CatalogoService } from '../services/catalogo.service';
-import { RegistroNaoLocalizadoError, MediaType } from 'common';
+import { RegistroNaoLocalizadoError, MediaType } from '../../common';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
 
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
@@ -92,8 +92,8 @@ export class CatalogoController {
   update(
     @Param('id') id: string,
     @Body() updateCatalogoDto: UpdateCatalogoDto,
-  ) {
-    this.service.update(id, updateCatalogoDto);
+  ): Promise<CatalogoDto> {
+    return this.service.update(id, updateCatalogoDto);
   }
 
   @ApiOperation({ summary: 'Incluir novo registro' })
