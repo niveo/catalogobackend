@@ -4,7 +4,7 @@ import { carregarSwaggerModule } from './catalogo/catalogo-swagger.document';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import * as nocache from 'nocache';
-import { HttpExceptionFilter } from '@common';
+import { HttpExceptionFilter } from 'common';
 import { ValidationPipe } from '@nestjs/common';
 
 const checkEnvironment = (configService: ConfigService) => {

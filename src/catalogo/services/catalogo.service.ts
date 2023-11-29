@@ -2,13 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { Catalogo } from '../schema/catalogo.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import {
-  CreateCatalogoDto,
-  UpdateCatalogoDto,
-  CatalogoDto,
-} from '../models/dtos';
-import { PageDto, PageOptionsDto, PageMetaDto } from '@dtos';
-import { RegistroNaoLocalizadoError } from '@common';
+import { CreateCatalogoDto, UpdateCatalogoDto, CatalogoDto } from '../dtos';
+import { PageDto, PageOptionsDto, PageMetaDto } from 'dtos';
+import { RegistroNaoLocalizadoError } from 'common';
 
 @Injectable()
 export class CatalogoService {

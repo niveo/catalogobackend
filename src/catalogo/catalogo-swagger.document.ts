@@ -8,6 +8,8 @@ const config = new DocumentBuilder()
   .setDescription('The Catalogo API description')
   .setVersion('1.0')
   .addTag('catalogo')
+  .addTag('catalogoPagina')
+  .addTag('catalogoPaginaMapeamento')
   .addOAuth2()
   .build();
 
@@ -18,7 +20,7 @@ export const carregarSwaggerModule = (app: INestApplication) => {
     include: [CatalogoModule],
   });
 
-  SwaggerModule.setup('api/catalogo', app, doc, {
+  SwaggerModule.setup('api', app, doc, {
     customSiteTitle: 'catalogoapi',
     swaggerOptions: {
       persistAuthorization: true,

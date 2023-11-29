@@ -6,9 +6,9 @@ import {
   NotFoundException,
   Post,
   Put,
-  Query,
   InternalServerErrorException,
   Param,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -22,31 +22,34 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { PageDto, PageOptionsDto } from 'dtos';
-import { CatalogoService } from '../services/catalogo.service';
+import {
+  CreateCatalogoPaginaMapeamentoDto,
+  UpdateCatalogoPaginaMapeamentoDto,
+  CatalogoPaginaMapeamentoDto,
+} from '../dtos';
 import {
   ApiPaginatedResponse,
-  RegistroNaoLocalizadoError,
   MediaType,
+  RegistroNaoLocalizadoError,
 } from 'common';
-import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
+import { CatalogoPaginaMapeamentoService } from 'catalogo/services/catalogo-pagina-mapeamento.service';
+import { PageDto, PageOptionsDto } from 'dtos';
 
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
-@ApiTags('catalogo')
-@Controller('catalogo')
-@ApiExtraModels(PageDto)
-@ApiExtraModels(CatalogoDto)
-export class CatalogoController {
-  constructor(private readonly service: CatalogoService) {}
+@ApiTags('catalogoPaginaMapeamento')
+@Controller('catalogo_pagina_mapeamento')
+@ApiExtraModels(CatalogoPaginaMapeamentoDto)
+export class CatalogoPaginaMapeamentoController {
+  constructor(private readonly service: CatalogoPaginaMapeamentoService) {}
 
-  @ApiPaginatedResponse(CatalogoDto)
+  @ApiPaginatedResponse(CatalogoPaginaMapeamentoDto)
   @ApiProduces(MediaType.APPLICATION_JSON)
   @ApiConsumes(MediaType.APPLICATION_JSON)
   @ApiOperation({ summary: 'Carregar registros paginados' })
   @Get()
   getAll(
     @Query() pageOptionsDto: PageOptionsDto,
-  ): Promise<PageDto<CatalogoDto>> {
+  ): Promise<PageDto<CatalogoPaginaMapeamentoDto>> {
     return this.service.getAll(pageOptionsDto);
   }
 
@@ -59,7 +62,7 @@ export class CatalogoController {
     type: String,
   })
   @Get(':id')
-  async getId(@Param('id') id: string): Promise<CatalogoDto> {
+  async getId(@Param('id') id: string): Promise<CatalogoPaginaMapeamentoDto> {
     try {
       return await this.service.getId(id);
     } catch (e) {
@@ -94,14 +97,14 @@ export class CatalogoController {
   @ApiResponse({ status: 200, description: 'Registro atualizado com sucesso.' })
   @Put(':id')
   @ApiBody({
-    type: UpdateCatalogoDto,
+    type: UpdateCatalogoPaginaMapeamentoDto,
     required: true,
     description: 'Atualzação de um catalogo pelo ID',
   })
   @ApiProduces(MediaType.APPLICATION_JSON)
   update(
     @Param('id') id: string,
-    @Body() updateCatalogoDto: UpdateCatalogoDto,
+    @Body() updateCatalogoDto: UpdateCatalogoPaginaMapeamentoDto,
   ) {
     this.service.update(id, updateCatalogoDto);
   }
@@ -109,17 +112,19 @@ export class CatalogoController {
   @ApiOperation({ summary: 'Incluir novo registro' })
   @ApiCreatedResponse({
     description: 'Registro incluido com sucesso',
-    type: CatalogoDto,
+    type: CatalogoPaginaMapeamentoDto,
   })
   @ApiProduces(MediaType.APPLICATION_JSON)
   @ApiConsumes(MediaType.APPLICATION_JSON)
   @Post()
   @ApiBody({
-    type: CreateCatalogoDto,
+    type: CreateCatalogoPaginaMapeamentoDto,
     required: true,
     description: 'Corpo do catalogo para inclusão',
   })
-  create(@Body() catalogoCreateDto: CreateCatalogoDto): Promise<CatalogoDto> {
+  create(
+    @Body() catalogoCreateDto: CreateCatalogoPaginaMapeamentoDto,
+  ): Promise<CatalogoPaginaMapeamentoDto> {
     return this.service.create(catalogoCreateDto);
   }
 }

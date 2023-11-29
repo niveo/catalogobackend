@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 
-export class CreateCatalogoPaginaDto {
+export class CatalogoPaginaDto {
   @ApiProperty({
     type: String,
     readOnly: true,

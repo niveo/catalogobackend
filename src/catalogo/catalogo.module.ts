@@ -12,6 +12,10 @@ import {
   CatalogoPaginaMapeamentoSchema,
 } from './schema/catalogo-pagina-mapemanto.schema';
 import { CatalogoService } from './services/catalogo.service';
+import { CatalogoPaginaService } from './services/catalogo-pagina.service';
+import { CatalogoPaginaMapeamentoService } from './services/catalogo-pagina-mapeamento.service';
+import { CatalogoPaginaController } from './controllers/catalogo-pagina.controller';
+import { CatalogoPaginaMapeamentoController } from './controllers/catalogo-pagina-mapemanto.controller';
 
 @Module({
   imports: [
@@ -40,7 +44,15 @@ import { CatalogoService } from './services/catalogo.service';
       },
     ]),
   ],
-  controllers: [CatalogoController],
-  providers: [CatalogoService],
+  controllers: [
+    CatalogoController,
+    CatalogoPaginaController,
+    CatalogoPaginaMapeamentoController,
+  ],
+  providers: [
+    CatalogoService,
+    CatalogoPaginaService,
+    CatalogoPaginaMapeamentoService,
+  ],
 })
 export class CatalogoModule {}
