@@ -28,12 +28,7 @@ import {
   UpdateCatalogoPaginaDto,
   CatalogoPaginaDto,
 } from '../dtos';
-import {
-  ApiPaginatedResponse,
-  MediaType,
-  RegistroNaoLocalizadoError,
-} from 'common';
-import { PageDto, PageOptionsDto } from 'dtos';
+import { MediaType, RegistroNaoLocalizadoError } from 'common';
 
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiTags('catalogoPagina')
@@ -42,15 +37,12 @@ import { PageDto, PageOptionsDto } from 'dtos';
 export class CatalogoPaginaController {
   constructor(private readonly service: CatalogoPaginaService) {}
 
-  @ApiPaginatedResponse(CatalogoPaginaDto)
   @ApiProduces(MediaType.APPLICATION_JSON)
   @ApiConsumes(MediaType.APPLICATION_JSON)
-  @ApiOperation({ summary: 'Carregar registros paginados' })
+  @ApiOperation({ summary: 'Carregar registros' })
   @Get()
-  getAll(
-    @Query() pageOptionsDto: PageOptionsDto,
-  ): Promise<PageDto<CatalogoPaginaDto>> {
-    return this.service.getAll(pageOptionsDto);
+  getAll(@Query() idCatalogo: string): Promise<CatalogoPaginaDto[]> {
+    return this.service.getAll(idCatalogo);
   }
 
   @ApiOperation({ summary: 'Carregar registro por id' })

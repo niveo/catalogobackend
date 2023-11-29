@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Catalogo } from '../schema/catalogo.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateCatalogoDto, UpdateCatalogoDto, CatalogoDto } from '../dtos';
-import { PageDto, PageOptionsDto, PageMetaDto } from 'dtos';
+import { CreateCatalogoDto, UpdateCatalogoDto, CatalogoDto } from '../dtos'; 
 import { RegistroNaoLocalizadoError } from 'common';
 
 @Injectable()
@@ -12,25 +11,10 @@ export class CatalogoService {
     @InjectModel(Catalogo.name) private readonly model: Model<Catalogo>,
   ) {}
 
-  async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<CatalogoDto>> {
-    const queryCount = this.model
-      .find()
-      .sort({ _id: -1 })
-      .skip(pageOptionsDto.skip)
-      .limit(pageOptionsDto.take);
-
-    const query = this.model
-      .find()
-      .sort({ _id: -1 })
-      .skip(pageOptionsDto.skip)
-      .limit(pageOptionsDto.take);
-
-    const itemCount = await queryCount.countDocuments();
+  async getAll(): Promise<CatalogoDto[]> {
+    const query = this.model.find();
     const entities = await query.exec();
-
-    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
-
-    return new PageDto(entities, pageMetaDto);
+    return entities;
   }
 
   create(catalogoCreateDto: CreateCatalogoDto): Promise<CatalogoDto> {

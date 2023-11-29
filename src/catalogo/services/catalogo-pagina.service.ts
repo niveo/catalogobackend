@@ -8,7 +8,6 @@ import {
   UpdateCatalogoPaginaDto,
 } from '../dtos';
 import { RegistroNaoLocalizadoError } from 'common';
-import { PageDto, PageMetaDto, PageOptionsDto } from 'dtos';
 
 @Injectable()
 export class CatalogoPaginaService {
@@ -17,27 +16,10 @@ export class CatalogoPaginaService {
     private readonly model: Model<CatalogoPagina>,
   ) {}
 
-  async getAll(
-    pageOptionsDto: PageOptionsDto,
-  ): Promise<PageDto<CatalogoPaginaDto>> {
-    const queryCount = this.model
-      .find()
-      .sort({ _id: -1 })
-      .skip(pageOptionsDto.skip)
-      .limit(pageOptionsDto.take);
-
-    const query = this.model
-      .find()
-      .sort({ _id: -1 })
-      .skip(pageOptionsDto.skip)
-      .limit(pageOptionsDto.take);
-
-    const itemCount = await queryCount.countDocuments();
+  async getAll(idCatalogo: string): Promise<CatalogoPaginaDto[]> {
+    const query = this.model.find({ catalogo: idCatalogo });
     const entities = await query.exec();
-
-    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
-
-    return new PageDto(entities, pageMetaDto);
+    return entities;
   }
 
   create(

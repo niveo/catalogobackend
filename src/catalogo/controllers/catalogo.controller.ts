@@ -6,7 +6,6 @@ import {
   NotFoundException,
   Post,
   Put,
-  Query,
   InternalServerErrorException,
   Param,
 } from '@nestjs/common';
@@ -22,32 +21,23 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { PageDto, PageOptionsDto } from 'dtos';
 import { CatalogoService } from '../services/catalogo.service';
-import {
-  ApiPaginatedResponse,
-  RegistroNaoLocalizadoError,
-  MediaType,
-} from 'common';
+import { RegistroNaoLocalizadoError, MediaType } from 'common';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
 
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiTags('catalogo')
 @Controller('catalogo')
-@ApiExtraModels(PageDto)
 @ApiExtraModels(CatalogoDto)
 export class CatalogoController {
   constructor(private readonly service: CatalogoService) {}
 
-  @ApiPaginatedResponse(CatalogoDto)
   @ApiProduces(MediaType.APPLICATION_JSON)
   @ApiConsumes(MediaType.APPLICATION_JSON)
-  @ApiOperation({ summary: 'Carregar registros paginados' })
+  @ApiOperation({ summary: 'Carregar registros' })
   @Get()
-  getAll(
-    @Query() pageOptionsDto: PageOptionsDto,
-  ): Promise<PageDto<CatalogoDto>> {
-    return this.service.getAll(pageOptionsDto);
+  getAll(): Promise<CatalogoDto[]> {
+    return this.service.getAll();
   }
 
   @ApiOperation({ summary: 'Carregar registro por id' })
