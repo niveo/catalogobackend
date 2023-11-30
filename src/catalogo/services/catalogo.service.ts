@@ -1,50 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { Catalogo } from '../schema/catalogo.schema';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { CreateCatalogoDto, UpdateCatalogoDto, CatalogoDto } from '../dtos';
-import { RegistroNaoLocalizadoError } from '../../common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, UpdateResult } from 'typeorm';
+import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
+import { Catalogo } from '../models/catalogo.entity';
 
 @Injectable()
 export class CatalogoService {
   constructor(
-    @InjectModel(Catalogo.name) private readonly model: Model<Catalogo>,
+    @InjectRepository(Catalogo)
+    private catalogoRepository: Repository<Catalogo>,
   ) {}
 
   async getAll(): Promise<CatalogoDto[]> {
-    const query = this.model.find();
-    const entities = await query.exec();
-    return entities;
+    return this.catalogoRepository.find();
   }
 
   create(catalogoCreateDto: CreateCatalogoDto): Promise<CatalogoDto> {
-    return new this.model(catalogoCreateDto).save();
+    return this.catalogoRepository.save(catalogoCreateDto);
   }
 
-  async getId(id: string): Promise<CatalogoDto> {
-    const registro = await this.model.findById(id);
-    if (!registro) throw new RegistroNaoLocalizadoError();
-    return registro;
+  async getId(id: number): Promise<CatalogoDto> {
+    return this.catalogoRepository.findOneByOrFail({
+      id: id,
+    });
   }
 
-  async getIdWithPaginas(id: string): Promise<any[]> {
-    const registro = await this.model.findById(id).select('paginas').exec();
-    if (!registro) throw new RegistroNaoLocalizadoError();
-    return registro.paginas?.map((m) => m._id);
-  }
-
-  async deleteId(id: string): Promise<CatalogoDto> {
-    const registro = await this.model.findByIdAndDelete(id);
-    if (!registro) throw new RegistroNaoLocalizadoError();
-    return registro;
+  async deleteId(id: number): Promise<UpdateResult> {
+    return await this.catalogoRepository.softDelete({
+      id: id,
+    });
   }
 
   async update(
-    id: string,
+    id: number,
     updateCatalogoDto: UpdateCatalogoDto,
-  ): Promise<CatalogoDto> {
-    return await this.model.findByIdAndUpdate(id, updateCatalogoDto, {
-      returnDocument: 'after',
-    });
+  ): Promise<UpdateResult> {
+    return await this.catalogoRepository.update(id, updateCatalogoDto);
   }
 }

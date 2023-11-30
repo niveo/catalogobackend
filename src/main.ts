@@ -9,11 +9,17 @@ import { ValidationPipe } from '@nestjs/common';
 
 const checkEnvironment = (configService: ConfigService) => {
   const requiredEnvVars = [
-    'MONGODB_URI',
     'PORT',
     'ISSUER_BASE_URL',
     'AUDIENCE',
     'CLIENT_ORIGIN_URL',
+    'CLIENTE_ID',
+    'CLIENT_SECRET',
+    'PGPASSWORD',
+    'PGUSER',
+    'PGDATABASE',
+    'PGHOST',
+    'DATABASE_URL',
   ];
 
   requiredEnvVars.forEach((envVar) => {

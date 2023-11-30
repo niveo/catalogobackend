@@ -1,13 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import mongoose from 'mongoose';
 
 export class CatalogoDto {
   @ApiProperty({
-    type: String,
+    type: Number,
     readOnly: true,
   })
-  _id?: mongoose.Schema.Types.ObjectId;
+  id?: number;
 
   @IsNotEmpty()
   @ApiProperty({

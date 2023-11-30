@@ -3,11 +3,11 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   NotFoundException,
+  Param,
   Post,
   Put,
-  InternalServerErrorException,
-  Param,
   Query,
 } from '@nestjs/common';
 import {
@@ -22,13 +22,14 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { InsertResult, UpdateResult } from 'typeorm';
+import { CatalogoPaginaMapeamentoService } from '../../catalogo/services/catalogo-pagina-mapeamento.service';
+import { MediaType, RegistroNaoLocalizadoError } from '../../common';
 import {
+  CatalogoPaginaMapeamentoDto,
   CreateCatalogoPaginaMapeamentoDto,
   UpdateCatalogoPaginaMapeamentoDto,
-  CatalogoPaginaMapeamentoDto,
 } from '../dtos';
-import { MediaType, RegistroNaoLocalizadoError } from '../../common';
-import { CatalogoPaginaMapeamentoService } from '../../catalogo/services/catalogo-pagina-mapeamento.service';
 
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiTags('catalogoPaginaMapeamento')
@@ -42,7 +43,7 @@ export class CatalogoPaginaMapeamentoController {
   @ApiOperation({ summary: 'Carregar registros paginados' })
   @Get()
   getAll(
-    @Query() idCatalogoPagina: string,
+    @Query() idCatalogoPagina: number,
   ): Promise<CatalogoPaginaMapeamentoDto[]> {
     return this.service.getAll(idCatalogoPagina);
   }
@@ -53,10 +54,10 @@ export class CatalogoPaginaMapeamentoController {
   @ApiParam({
     name: 'id',
     required: true,
-    type: String,
+    type: Number,
   })
   @Get(':id')
-  async getId(@Param('id') id: string): Promise<CatalogoPaginaMapeamentoDto> {
+  async getId(@Param('id') id: number): Promise<CatalogoPaginaMapeamentoDto> {
     try {
       return await this.service.getId(id);
     } catch (e) {
@@ -73,10 +74,10 @@ export class CatalogoPaginaMapeamentoController {
   @ApiParam({
     name: 'id',
     required: true,
-    type: String,
+    type: Number,
   })
   @Delete(':id')
-  async deleteId(@Param('id') id: string) {
+  async deleteId(@Param('id') id: number) {
     try {
       return await this.service.deleteId(id);
     } catch (e) {
@@ -95,12 +96,17 @@ export class CatalogoPaginaMapeamentoController {
     required: true,
     description: 'Atualzação de um catalogo pelo ID',
   })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+  })
   @ApiProduces(MediaType.APPLICATION_JSON)
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateCatalogoDto: UpdateCatalogoPaginaMapeamentoDto,
-  ) {
-    this.service.update(id, updateCatalogoDto);
+  ): Promise<UpdateResult> {
+    return this.service.update(id, updateCatalogoDto);
   }
 
   @ApiOperation({ summary: 'Incluir novo registro' })
@@ -118,7 +124,7 @@ export class CatalogoPaginaMapeamentoController {
   })
   create(
     @Body() catalogoCreateDto: CreateCatalogoPaginaMapeamentoDto,
-  ): Promise<CatalogoPaginaMapeamentoDto> {
+  ): Promise<InsertResult> {
     return this.service.create(catalogoCreateDto);
   }
 }

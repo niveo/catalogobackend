@@ -3,11 +3,11 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   NotFoundException,
+  Param,
   Post,
   Put,
-  InternalServerErrorException,
-  Param,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -21,9 +21,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { CatalogoService } from '../services/catalogo.service';
-import { RegistroNaoLocalizadoError, MediaType } from '../../common';
+import { UpdateResult } from 'typeorm';
+import { MediaType, RegistroNaoLocalizadoError } from '../../common';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
+import { CatalogoService } from '../services/catalogo.service';
 
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiTags('catalogo')
@@ -46,10 +47,10 @@ export class CatalogoController {
   @ApiParam({
     name: 'id',
     required: true,
-    type: String,
+    type: Number,
   })
   @Get(':id')
-  async getId(@Param('id') id: string): Promise<CatalogoDto> {
+  async getId(@Param('id') id: number): Promise<CatalogoDto> {
     try {
       return await this.service.getId(id);
     } catch (e) {
@@ -66,10 +67,10 @@ export class CatalogoController {
   @ApiParam({
     name: 'id',
     required: true,
-    type: String,
+    type: Number,
   })
   @Delete(':id')
-  async deleteId(@Param('id') id: string) {
+  async deleteId(@Param('id') id: number): Promise<UpdateResult> {
     try {
       return await this.service.deleteId(id);
     } catch (e) {
@@ -88,11 +89,16 @@ export class CatalogoController {
     required: true,
     description: 'Atualzação de um catalogo pelo ID',
   })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+  })
   @ApiProduces(MediaType.APPLICATION_JSON)
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateCatalogoDto: UpdateCatalogoDto,
-  ): Promise<CatalogoDto> {
+  ): Promise<UpdateResult> {
     return this.service.update(id, updateCatalogoDto);
   }
 

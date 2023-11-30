@@ -1,12 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import mongoose from 'mongoose';
 
 export class CatalogoPaginaMapeamentoDto {
   @ApiProperty({
-    type: String,
+    type: Number,
     readOnly: true,
   })
-  _id?: mongoose.Schema.Types.ObjectId;
+  id?: number;
 
   @ApiProperty({
     required: true,
