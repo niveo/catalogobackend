@@ -1,15 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { CatalogoModule } from './catalogo/catalogo.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { typeOrmProviderModule } from './typeorm.module';
+import { CatalogoModule } from './catalogo/catalogo.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      envFilePath: process.env.PRODUCTION ? '.env' : '.development.env',
-    }),
-    ...typeOrmProviderModule,
-    CatalogoModule,
-  ],
+  imports: [ConfigModule.forRoot(), ...typeOrmProviderModule, CatalogoModule],
+  providers: [AppService],
+  controllers: [AppController],
 })
 export class AppModule {}

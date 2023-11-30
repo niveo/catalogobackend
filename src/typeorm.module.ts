@@ -14,6 +14,7 @@ export const typeOrmProviderModule = [
         host: config.get('PGHOST'),
         port: 5432,
         username: config.get('PGUSER'),
+        url: config.get('DATABASE_URL'),
         password: config.get('PGPASSWORD'),
         database: config.get('PGDATABASE'),
         entities: [Catalogo, CatalogoPagina, CatalogoPaginaMapeamento],
