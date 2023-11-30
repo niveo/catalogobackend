@@ -18,6 +18,7 @@ export const typeOrmProviderModule = [
         database: config.get('PGDATABASE'),
         entities: [Catalogo, CatalogoPagina, CatalogoPaginaMapeamento],
         synchronize: true,
+        ssl: true,
       };
     },
     imports: [
