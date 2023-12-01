@@ -12,7 +12,7 @@ export class CatalogoService {
   ) {}
 
   async getAll(): Promise<CatalogoDto[]> {
-    return this.catalogoRepository.find();
+    return await this.catalogoRepository.find();
   }
 
   create(catalogoCreateDto: CreateCatalogoDto): Promise<CatalogoDto> {

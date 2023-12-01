@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty } from 'class-validator';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { IsBoolean, IsDefined, IsNotEmpty, IsString } from 'class-validator';
 import { CatalogoPaginaDto } from './catalogo-pagina.dto';
+import { Exclude } from 'class-transformer';
 
 export class CatalogoDto {
   @ApiProperty({
@@ -9,6 +10,8 @@ export class CatalogoDto {
   })
   id?: number;
 
+  @IsDefined()
+  @IsString()
   @IsNotEmpty()
   @ApiProperty({
     required: true,
@@ -26,6 +29,22 @@ export class CatalogoDto {
     type: Boolean,
   })
   ativo: boolean = false;
+
+  @Exclude()
+  @ApiHideProperty()
+  cadastrado?: Date;
+
+  @Exclude()
+  @ApiHideProperty()
+  atualizado?: Date;
+
+  @Exclude()
+  @ApiHideProperty()
+  removido?: Date;
+
+  @Exclude()
+  @ApiHideProperty()
+  versao?: number;
 
   @ApiProperty({
     required: false,
