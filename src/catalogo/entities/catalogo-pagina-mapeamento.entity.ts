@@ -22,6 +22,10 @@ export class CatalogoPaginaMapeamento extends BaseEntity {
   @Column('decimal')
   height: number;
 
-  @ManyToOne(() => CatalogoPagina, (metadata) => metadata.mapeamentos)
+  @ManyToOne(() => CatalogoPagina, (metadata) => metadata.mapeamentos, {
+    nullable: false,
+    lazy: true,
+    eager: false,
+  })
   catalogoPagina: CatalogoPagina;
 }

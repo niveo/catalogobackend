@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
-import { Catalogo } from '../models/catalogo.entity';
+import { Catalogo } from '../entities/catalogo.entity';
 
 @Injectable()
 export class CatalogoService {

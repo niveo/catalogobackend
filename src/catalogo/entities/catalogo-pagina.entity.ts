@@ -11,6 +11,7 @@ export class CatalogoPagina extends BaseEntity {
   @ManyToOne(() => Catalogo, (metadata) => metadata.paginas, {
     nullable: false,
     lazy: true,
+    eager: false,
   })
   @JoinColumn({ name: 'catalogoId', referencedColumnName: 'id' })
   catalogo: Catalogo;
@@ -19,8 +20,8 @@ export class CatalogoPagina extends BaseEntity {
     () => CatalogoPaginaMapeamento,
     (metadata) => metadata.catalogoPagina,
     {
-      lazy: true,
       onDelete: 'CASCADE',
+      cascade: true,
     },
   )
   mapeamentos: CatalogoPaginaMapeamento[];

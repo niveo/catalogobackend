@@ -6,7 +6,7 @@ import {
   CreateCatalogoPaginaMapeamentoDto,
   UpdateCatalogoPaginaMapeamentoDto,
 } from '../dtos';
-import { CatalogoPaginaMapeamento } from '../models/catalogo-pagina-mapeamento.entity';
+import { CatalogoPaginaMapeamento } from '../entities/catalogo-pagina-mapeamento.entity';
 
 @Injectable()
 export class CatalogoPaginaMapeamentoService {

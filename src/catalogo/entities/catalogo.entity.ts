@@ -13,8 +13,8 @@ export class Catalogo extends BaseEntity {
   ativo: boolean = false;
 
   @OneToMany(() => CatalogoPagina, (metadata) => metadata.catalogo, {
-    lazy: true,
     onDelete: 'CASCADE',
+    cascade: true,
   })
   paginas: CatalogoPagina[];
 }

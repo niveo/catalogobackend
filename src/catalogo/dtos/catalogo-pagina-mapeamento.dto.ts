@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { CatalogoPaginaDto } from './catalogo-pagina.dto';
 
 export class CatalogoPaginaMapeamentoDto {
   @ApiProperty({
@@ -31,6 +32,10 @@ export class CatalogoPaginaMapeamentoDto {
   })
   finalPosicalY: number;
 
+  @ApiProperty({
+    required: true,
+    type: Number,
+  })
   width: number;
 
   @ApiProperty({
@@ -38,4 +43,10 @@ export class CatalogoPaginaMapeamentoDto {
     type: Number,
   })
   height: number;
+
+  @ApiProperty({
+    required: true,
+    type: () => CatalogoPaginaDto,
+  })
+  catalogoPagina?: CatalogoPaginaDto;
 }

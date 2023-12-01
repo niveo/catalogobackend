@@ -1,26 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeOrmProviderModule } from '../../typeorm.module';
-import { Catalogo } from '../models';
+import { Catalogo } from '../entities';
 import { CatalogoUpdateDtoStub } from '../tests/stubs/catalogo-update.dto.stub';
 import { CatalogoCreateDtoStub } from '../tests/stubs/catalogo-create.dto.stub';
 import { CatalogoService } from './catalogo.service';
+import { CommonModule } from '../../common.module';
+import { criarContainer, removerContainer } from '../../tests/container-test';
 
 describe('CatalogoService', () => {
   let catalogoService: CatalogoService;
 
   beforeAll(async () => {
+    await criarContainer();
     const app: TestingModule = await Test.createTestingModule({
-      imports: [...typeOrmProviderModule, TypeOrmModule.forFeature([Catalogo])],
+      imports: [CommonModule, TypeOrmModule.forFeature([Catalogo])],
       providers: [CatalogoService],
     }).compile();
 
     catalogoService = app.get<CatalogoService>(CatalogoService);
   });
 
-  afterAll(async () => {});
-
-  afterEach(async () => {});
+  afterAll(async () => {
+    await removerContainer();
+  });
 
   it('should be defined', () => {
     expect(catalogoService).toBeDefined();
@@ -28,10 +30,20 @@ describe('CatalogoService', () => {
 
   describe('Salvar Catalogo', () => {
     it('Tem que retornar objeto salvo', async () => {
-      const { descricao } = await catalogoService.create(
+      const { descricao, paginas } = await catalogoService.create(
         CatalogoCreateDtoStub(),
       );
       expect(descricao).toEqual(CatalogoCreateDtoStub().descricao);
+      expect(paginas).not.toBeNull();
+      expect(paginas).not.toBe([]);
+      expect(paginas).toHaveLength(CatalogoCreateDtoStub().paginas.length);
+
+      const { mapeamentos } = paginas[0];
+      const { mapeamentos: mapeamentosStub } =
+        CatalogoCreateDtoStub().paginas[0];
+      expect(mapeamentos).not.toBeNull();
+      expect(mapeamentos).not.toBe([]);
+      expect(mapeamentos).toHaveLength(mapeamentosStub.length);
     });
   });
 

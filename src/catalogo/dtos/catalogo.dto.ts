@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
+import { CatalogoPaginaDto } from './catalogo-pagina.dto';
 
 export class CatalogoDto {
   @ApiProperty({
@@ -24,4 +25,11 @@ export class CatalogoDto {
     type: Boolean,
   })
   ativo: boolean = false;
+
+  @ApiProperty({
+    required: true,
+    type: CatalogoPaginaDto,
+    isArray: true,
+  })
+  paginas?: CatalogoPaginaDto[];
 }
