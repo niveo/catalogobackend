@@ -7,11 +7,11 @@ import { CatalogoPaginaService } from './catalogo-pagina.service';
 import { CatalogoPaginaCreateDtoStub } from '../tests/stubs/catalogo-pagina-create.dto.stub';
 import { CatalogoService } from './catalogo.service';
 import { CatalogoPaginaUpdateDtoStub } from '../tests/stubs/catalogo-pagina-update.dto.stub';
-import { CatalogoCreateDtoStub } from '../tests/stubs/catalogo-create.dto.stub';
+import { CatalogoDto } from '../dtos';
 
 describe('CatalogoPaginaService', () => {
   let catalogoPaginaService: CatalogoPaginaService;
-  let catalogoService: CatalogoService;
+  let newCatalgo: CatalogoDto;
   let dataSource: DataSource;
 
   beforeAll(async () => {
@@ -27,9 +27,14 @@ describe('CatalogoPaginaService', () => {
       CatalogoPaginaService,
     );
 
-    catalogoService = app.get<CatalogoService>(CatalogoService);
-
     dataSource = app.get<DataSource>(DataSource);
+
+    const catalogoService = app.get<CatalogoService>(CatalogoService);
+
+    newCatalgo = await catalogoService.create({
+      ativo: true,
+      descricao: '1',
+    });
   });
 
   afterAll(async () => {
@@ -43,11 +48,6 @@ describe('CatalogoPaginaService', () => {
 
   describe('Salvar Catalogo Pagina', () => {
     it('Tem que retornar objeto salvo', async () => {
-      const newCatalgo = await catalogoService.create({
-        ativo: true,
-        descricao: '1',
-      });
-
       const catalogoPaginaCreateDtoStub =
         CatalogoPaginaCreateDtoStub(newCatalgo);
 
@@ -67,10 +67,6 @@ describe('CatalogoPaginaService', () => {
 
   describe('Atualizar Catalogo Pagina', () => {
     it('Tem que retornar um registro e pagina atualizada', async () => {
-      const newCatalgo = await catalogoService.create({
-        ativo: true,
-        descricao: '1',
-      });
       const { id } = await catalogoPaginaService.create(
         CatalogoPaginaCreateDtoStub(newCatalgo),
       );
@@ -89,20 +85,15 @@ describe('CatalogoPaginaService', () => {
   });
 
   describe('Ler Paginas Catalogos ', () => {
-    it('Deve retornar um registro"', async () => {
-      const newCatalgo = await catalogoService.create(CatalogoCreateDtoStub());
+    it('Deve retornar registros do stub"', async () => {
       const registros = await catalogoPaginaService.getAll(newCatalgo.id);
       expect(registros).not.toBeNull();
-      expect(registros).toHaveLength(CatalogoCreateDtoStub().paginas.length);
+      expect(registros).toHaveLength(2);
     });
   });
 
   describe('Remover Catalogo Pagina', () => {
     it('Tem que retornar um registro removido"', async () => {
-      const newCatalgo = await catalogoService.create({
-        ativo: true,
-        descricao: '1',
-      });
       const { id } = await catalogoPaginaService.create(
         CatalogoPaginaCreateDtoStub(newCatalgo),
       );
@@ -111,15 +102,11 @@ describe('CatalogoPaginaService', () => {
     });
 
     it('Não pode retornar erro da busca do registro removido', async () => {
-      const newCatalgo = await catalogoService.create({
-        ativo: true,
-        descricao: '1',
-      });
       const { id } = await catalogoPaginaService.create(
         CatalogoPaginaCreateDtoStub(newCatalgo),
       );
-      await catalogoService.deleteId(id);
-      await expect(catalogoService.getId(id)).rejects.toThrow(
+      await catalogoPaginaService.deleteId(id);
+      await expect(catalogoPaginaService.getId(id)).rejects.toThrow(
         EntityNotFoundError,
       );
     });

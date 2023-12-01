@@ -56,14 +56,7 @@ export class CatalogoPaginaController {
   })
   @Get(':id')
   async getId(@Param('id') id: number): Promise<CatalogoPaginaDto> {
-    try {
-      return await this.service.getId(id);
-    } catch (e) {
-      console.error(e);
-      if (e instanceof RegistroNaoLocalizadoError)
-        throw new NotFoundException();
-      else throw new InternalServerErrorException();
-    }
+    return await this.service.getId(id);
   }
 
   @ApiOperation({ summary: 'Remover registro por id' })
