@@ -5,23 +5,26 @@ import { CatalogoUpdateDtoStub } from '../tests/stubs/catalogo-update.dto.stub';
 import { CatalogoCreateDtoStub } from '../tests/stubs/catalogo-create.dto.stub';
 import { CatalogoService } from './catalogo.service';
 import { CommonModule } from '../../common.module';
-import { criarContainer, removerContainer } from '../../tests/container-test';
+import { DataSource } from 'typeorm';
 
 describe('CatalogoService', () => {
   let catalogoService: CatalogoService;
+  let dataSource: DataSource;
 
   beforeAll(async () => {
-    await criarContainer();
     const app: TestingModule = await Test.createTestingModule({
       imports: [CommonModule, TypeOrmModule.forFeature([Catalogo])],
       providers: [CatalogoService],
     }).compile();
 
     catalogoService = app.get<CatalogoService>(CatalogoService);
+
+    dataSource = app.get<DataSource>(DataSource);
   });
 
   afterAll(async () => {
-    await removerContainer();
+    await dataSource.dropDatabase();
+    await dataSource.destroy();
   });
 
   it('should be defined', () => {

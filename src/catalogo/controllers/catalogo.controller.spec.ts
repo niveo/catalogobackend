@@ -1,18 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Catalogo } from '../entities';
-import { CatalogoUpdateDtoStub } from '../tests/stubs/catalogo-update.dto.stub';
-import { CatalogoCreateDtoStub } from '../tests/stubs/catalogo-create.dto.stub';
-import { CatalogoService } from '../services/catalogo.service';
-import { CatalogoController } from './catalogo.controller';
 import { CommonModule } from '../../common.module';
-import { criarContainer, removerContainer } from '../../tests/container-test';
+import { Catalogo } from '../entities';
+import { CatalogoService } from '../services/catalogo.service';
+import { CatalogoCreateDtoStub } from '../tests/stubs/catalogo-create.dto.stub';
+import { CatalogoUpdateDtoStub } from '../tests/stubs/catalogo-update.dto.stub';
+import { CatalogoController } from './catalogo.controller';
+import { DataSource } from 'typeorm';
 
 describe('CatalogoController', () => {
   let catalogoController: CatalogoController;
+  let dataSource: DataSource;
 
   beforeAll(async () => {
-    await criarContainer();
     const app: TestingModule = await Test.createTestingModule({
       imports: [CommonModule, TypeOrmModule.forFeature([Catalogo])],
       providers: [CatalogoService],
@@ -20,10 +20,13 @@ describe('CatalogoController', () => {
     }).compile();
 
     catalogoController = app.get<CatalogoController>(CatalogoController);
+
+    dataSource = app.get<DataSource>(DataSource);
   });
 
   afterAll(async () => {
-    await removerContainer();
+    await dataSource.dropDatabase();
+    await dataSource.destroy();
   });
 
   it('should be defined', () => {
@@ -41,7 +44,6 @@ describe('CatalogoController', () => {
       expect(paginas).toHaveLength(CatalogoCreateDtoStub().paginas.length);
 
       const { mapeamentos } = paginas[0];
-      console.log(mapeamentos);
       const { mapeamentos: mapeamentosStub } =
         CatalogoCreateDtoStub().paginas[0];
       expect(mapeamentos).not.toBeNull();

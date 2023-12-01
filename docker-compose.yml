@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres
     env_file:
-    - .development.env
+    - .env.teste
     ports:
       - "5432:5432"
 networks:

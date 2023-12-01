@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { production } from './environments/environment';
+import { envProduction, envDevelopment } from './environments/environment';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   Catalogo,
@@ -11,7 +11,11 @@ import {
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: production ? '.env' : '.development.env',
+      envFilePath: envProduction
+        ? '.env'
+        : envDevelopment
+          ? '.env.development'
+          : '.env.teste',
     }),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => {
@@ -24,8 +28,9 @@ import {
           password: config.get('PGPASSWORD'),
           database: config.get('PGDATABASE'),
           entities: [Catalogo, CatalogoPagina, CatalogoPaginaMapeamento],
-          synchronize: true,
-          ssl: production,
+          //Setting synchronize: true shouldn't be used in production - otherwise you can lose production data.
+          synchronize: !envProduction,
+          ssl: envProduction,
         };
       },
       imports: [ConfigModule],
