@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../model/base-entity';
 import { CatalogoPaginaMapeamento } from './catalogo-pagina-mapeamento.entity';
 import { Catalogo } from './catalogo.entity';
@@ -10,10 +10,7 @@ export class CatalogoPagina extends BaseEntity {
 
   @ManyToOne(() => Catalogo, (metadata) => metadata.paginas, {
     nullable: false,
-    lazy: true,
-    eager: false,
   })
-  @JoinColumn({ name: 'catalogoId', referencedColumnName: 'id' })
   catalogo: Catalogo;
 
   @OneToMany(

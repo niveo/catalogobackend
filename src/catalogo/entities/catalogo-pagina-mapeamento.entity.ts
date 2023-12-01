@@ -24,8 +24,6 @@ export class CatalogoPaginaMapeamento extends BaseEntity {
 
   @ManyToOne(() => CatalogoPagina, (metadata) => metadata.mapeamentos, {
     nullable: false,
-    lazy: true,
-    eager: false,
   })
   catalogoPagina: CatalogoPagina;
 }

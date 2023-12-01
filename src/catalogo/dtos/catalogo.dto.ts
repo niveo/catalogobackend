@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsBoolean, IsNotEmpty } from 'class-validator';
 import { CatalogoPaginaDto } from './catalogo-pagina.dto';
 
 export class CatalogoDto {
@@ -16,6 +16,7 @@ export class CatalogoDto {
   })
   descricao: string;
 
+  @IsBoolean()
   @IsNotEmpty()
   @ApiProperty({
     description:
@@ -27,7 +28,7 @@ export class CatalogoDto {
   ativo: boolean = false;
 
   @ApiProperty({
-    required: true,
+    required: false,
     type: CatalogoPaginaDto,
     isArray: true,
   })

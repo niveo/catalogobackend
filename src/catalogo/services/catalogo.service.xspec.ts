@@ -5,7 +5,7 @@ import { CatalogoUpdateDtoStub } from '../tests/stubs/catalogo-update.dto.stub';
 import { CatalogoCreateDtoStub } from '../tests/stubs/catalogo-create.dto.stub';
 import { CatalogoService } from './catalogo.service';
 import { CommonModule } from '../../common.module';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityNotFoundError } from 'typeorm';
 
 describe('CatalogoService', () => {
   let catalogoService: CatalogoService;
@@ -33,19 +33,19 @@ describe('CatalogoService', () => {
 
   describe('Salvar Catalogo', () => {
     it('Tem que retornar objeto salvo', async () => {
+      const catalogoCreateDtoStub = CatalogoCreateDtoStub();
       const { descricao, paginas } = await catalogoService.create(
-        CatalogoCreateDtoStub(),
+        catalogoCreateDtoStub,
       );
-      expect(descricao).toEqual(CatalogoCreateDtoStub().descricao);
+      expect(descricao).toEqual(catalogoCreateDtoStub.descricao);
       expect(paginas).not.toBeNull();
-      expect(paginas).not.toBe([]);
-      expect(paginas).toHaveLength(CatalogoCreateDtoStub().paginas.length);
+      expect(paginas).not.toEqual([]);
+      expect(paginas).toHaveLength(catalogoCreateDtoStub.paginas.length);
 
       const { mapeamentos } = paginas[0];
-      const { mapeamentos: mapeamentosStub } =
-        CatalogoCreateDtoStub().paginas[0];
+      const { mapeamentos: mapeamentosStub } = catalogoCreateDtoStub.paginas[0];
       expect(mapeamentos).not.toBeNull();
-      expect(mapeamentos).not.toBe([]);
+      expect(mapeamentos).not.toEqual([]);
       expect(mapeamentos).toHaveLength(mapeamentosStub.length);
     });
   });
@@ -72,10 +72,18 @@ describe('CatalogoService', () => {
   });
 
   describe('Remover Catalogo', () => {
-    it('Tem que retornar um registro removido"', async () => {
+    it('Tem que retornar um registro removido', async () => {
       const { id } = await catalogoService.create(CatalogoCreateDtoStub());
       const { affected } = await catalogoService.deleteId(id);
       expect(affected).toEqual(1);
+    });
+
+    it('Não pode retornar erro da busca do registro removido', async () => {
+      const { id } = await catalogoService.create(CatalogoCreateDtoStub());
+      await catalogoService.deleteId(id);
+      await expect(catalogoService.getId(id)).rejects.toThrow(
+        EntityNotFoundError,
+      );
     });
   });
 });

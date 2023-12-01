@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { envProduction, envDevelopment } from './environments/environment';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   Catalogo,
   CatalogoPagina,
   CatalogoPaginaMapeamento,
 } from './catalogo/entities';
+import { envDevelopment, envProduction } from './environments/environment';
 
 @Module({
   imports: [
@@ -31,6 +31,7 @@ import {
           //Setting synchronize: true shouldn't be used in production - otherwise you can lose production data.
           synchronize: !envProduction,
           ssl: envProduction,
+          logging: false,
         };
       },
       imports: [ConfigModule],
