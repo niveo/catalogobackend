@@ -22,7 +22,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { InsertResult, UpdateResult } from 'typeorm';
+import { UpdateResult } from 'typeorm';
 import { CatalogoPaginaMapeamentoService } from '../../catalogo/services/catalogo-pagina-mapeamento.service';
 import { MediaType, RegistroNaoLocalizadoError } from '../../common';
 import {
@@ -58,14 +58,7 @@ export class CatalogoPaginaMapeamentoController {
   })
   @Get(':id')
   async getId(@Param('id') id: number): Promise<CatalogoPaginaMapeamentoDto> {
-    try {
-      return await this.service.getId(id);
-    } catch (e) {
-      console.error(e);
-      if (e instanceof RegistroNaoLocalizadoError)
-        throw new NotFoundException();
-      else throw new InternalServerErrorException();
-    }
+    return await this.service.getId(id);
   }
 
   @ApiOperation({ summary: 'Remover registro por id' })
@@ -124,7 +117,7 @@ export class CatalogoPaginaMapeamentoController {
   })
   create(
     @Body() catalogoCreateDto: CreateCatalogoPaginaMapeamentoDto,
-  ): Promise<InsertResult> {
+  ): Promise<CatalogoPaginaMapeamentoDto> {
     return this.service.create(catalogoCreateDto);
   }
 }

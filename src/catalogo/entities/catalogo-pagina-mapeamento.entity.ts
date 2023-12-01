@@ -4,22 +4,22 @@ import { CatalogoPagina } from './catalogo-pagina.entity';
 
 @Entity()
 export class CatalogoPaginaMapeamento extends BaseEntity {
-  @Column('decimal')
+  @Column('double precision', { nullable: false })
   inicialPosicalX: number;
 
-  @Column('decimal')
+  @Column('double precision', { nullable: false })
   finalPosicalX: number;
 
-  @Column('decimal')
+  @Column('double precision', { nullable: false })
   inicialPosicalY: number;
 
-  @Column('decimal')
+  @Column('double precision', { nullable: false })
   finalPosicalY: number;
 
-  @Column('decimal')
+  @Column('double precision', { nullable: false })
   width: number;
 
-  @Column('decimal')
+  @Column('double precision', { nullable: false })
   height: number;
 
   @ManyToOne(() => CatalogoPagina, (metadata) => metadata.mapeamentos, {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { InsertResult, Repository, UpdateResult } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import {
   CatalogoPaginaMapeamentoDto,
   CreateCatalogoPaginaMapeamentoDto,
@@ -25,10 +25,14 @@ export class CatalogoPaginaMapeamentoService {
     });
   }
 
+  async getAll2(): Promise<CatalogoPaginaMapeamentoDto[]> {
+    return this.catalogoRepository.find();
+  }
+
   create(
     createCatalogoPaginaMapeamentoDto: CreateCatalogoPaginaMapeamentoDto,
-  ): Promise<InsertResult> {
-    return this.catalogoRepository.insert(createCatalogoPaginaMapeamentoDto);
+  ): Promise<CatalogoPaginaMapeamentoDto> {
+    return this.catalogoRepository.save(createCatalogoPaginaMapeamentoDto);
   }
 
   async getId(id: number): Promise<CatalogoPaginaMapeamentoDto> {
