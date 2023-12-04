@@ -8,33 +8,10 @@ import { HttpExceptionFilter } from './common';
 import { ValidationPipe } from '@nestjs/common';
 import { envProduction } from './environments/environment';
 
-const checkEnvironment = (configService: ConfigService) => {
-  const requiredEnvVars = [
-    'PORT',
-    'ISSUER_BASE_URL',
-    'AUDIENCE',
-    'CLIENT_ORIGIN_URL',
-    'CLIENTE_ID',
-    'CLIENT_SECRET',
-    'PGPASSWORD',
-    'PGUSER',
-    'PGDATABASE',
-    'PGHOST',
-    'DATABASE_URL',
-  ];
-
-  requiredEnvVars.forEach((envVar) => {
-    if (!configService.get<string>(envVar)) {
-      throw Error(`Undefined environment variable: ${envVar}`);
-    }
-  });
-};
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const configService = app.get<ConfigService>(ConfigService);
-  checkEnvironment(configService);
 
   carregarSwaggerModule(app);
 

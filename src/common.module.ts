@@ -19,6 +19,7 @@ import { envDevelopment, envProduction } from './environments/environment';
     }),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => {
+        console.log('PGHOST: ', config.get('PGHOST'));
         return {
           type: 'postgres',
           host: config.get('PGHOST'),

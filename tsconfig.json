@@ -1,19 +1,17 @@
-{
-  "ts-node": {
-    // Do not forget to `npm i -D tsconfig-paths`
-    "require": ["tsconfig-paths/register"]
-},
+{ 
   "compilerOptions": {
     "module": "CommonJS",
+    "lib": ["esnext"],
+    "moduleResolution": "node",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
+    "target": "es2017",
     "sourceMap": true,
-    "outDir": "dist",
-    "baseUrl": "./", 
+    "outDir": "./dist",
+    "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -22,4 +20,9 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false, 
   }, 
+  "exclude": [
+    "node_modules",
+    "dist",
+    "public"
+  ]
 }
