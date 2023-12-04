@@ -10,11 +10,13 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
@@ -29,7 +31,10 @@ import {
 import { MediaType } from '../../common';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
 import { CatalogoService } from '../services/catalogo.service';
+import { AuthorizationGuard } from '../../authorization';
 
+@ApiBearerAuth()
+@UseGuards(AuthorizationGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiTags('catalogo')

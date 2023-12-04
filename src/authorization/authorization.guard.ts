@@ -19,8 +19,6 @@ export class AuthorizationGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const response = context.switchToHttp().getResponse<Response>();
 
-    console.log(request);
-
     const validateAccessToken = promisify(auth());
 
     try {
@@ -29,18 +27,12 @@ export class AuthorizationGuard implements CanActivate {
       return true;
     } catch (error) {
       if (error instanceof InvalidTokenError) {
-        console.warn('1 InvalidTokenError');
-
         throw new UnauthorizedException('Bad credentials');
       }
 
       if (error instanceof UnauthorizedError) {
-        console.warn('2 UnauthorizedError');
         throw new UnauthorizedException('Requires authentication');
       }
-
-      console.warn('3 InternalServerErrorException');
-
       throw new InternalServerErrorException();
     }
   }
