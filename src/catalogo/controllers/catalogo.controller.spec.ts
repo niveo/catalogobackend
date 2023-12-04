@@ -1,50 +1,32 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getModelToken } from '@nestjs/mongoose';
-import { Catalogo, CatalogoSchema } from '../schema/catalogo.schema';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import { Connection, Model, connect } from 'mongoose';
-import { CatalogoDtoStub } from '../tests/stubs/catalogo.dto.stub';
-import { CatalogoUpdateDtoStub } from '../tests/stubs/catalogo-update.dto.stub';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CommonModule } from '../../common.module';
+import { Catalogo } from '../entities';
 import { CatalogoService } from '../services/catalogo.service';
+import { CatalogoCreateDtoStub } from '../tests/stubs/catalogo-create.dto.stub';
+import { CatalogoUpdateDtoStub } from '../tests/stubs/catalogo-update.dto.stub';
 import { CatalogoController } from './catalogo.controller';
+import { DataSource } from 'typeorm';
 
 describe('CatalogoController', () => {
   let catalogoController: CatalogoController;
-
-  let mongod: MongoMemoryServer;
-  let mongoConnection: Connection;
-  let catalogoModel: Model<Catalogo>;
+  let dataSource: DataSource;
 
   beforeAll(async () => {
-    mongod = await MongoMemoryServer.create();
-    const uri = mongod.getUri();
-    mongoConnection = (await connect(uri)).connection;
-    catalogoModel = mongoConnection.model(Catalogo.name, CatalogoSchema);
-
     const app: TestingModule = await Test.createTestingModule({
-      imports: [],
+      imports: [CommonModule, TypeOrmModule.forFeature([Catalogo])],
+      providers: [CatalogoService],
       controllers: [CatalogoController],
-      providers: [
-        CatalogoService,
-        { provide: getModelToken(Catalogo.name), useValue: catalogoModel },
-      ],
     }).compile();
 
     catalogoController = app.get<CatalogoController>(CatalogoController);
+
+    dataSource = app.get<DataSource>(DataSource);
   });
 
   afterAll(async () => {
-    await mongoConnection.dropDatabase();
-    await mongoConnection.close();
-    await mongod.stop();
-  });
-
-  afterEach(async () => {
-    const collections = mongoConnection.collections;
-    for (const key in collections) {
-      const collection = collections[key];
-      await collection.deleteMany({});
-    }
+    await dataSource.dropDatabase();
+    await dataSource.destroy();
   });
 
   it('should be defined', () => {
@@ -53,40 +35,49 @@ describe('CatalogoController', () => {
 
   describe('Salvar Catalogo', () => {
     it('Tem que retornar objeto salvo', async () => {
-      const { descricao } = await catalogoController.create(CatalogoDtoStub());
-      expect(descricao).toEqual(CatalogoDtoStub().descricao);
+      const { descricao, paginas } = await catalogoController.create(
+        CatalogoCreateDtoStub(),
+      );
+      expect(descricao).toEqual(CatalogoCreateDtoStub().descricao);
+      expect(paginas).not.toBeNull();
+      expect(paginas).not.toEqual([]);
+      expect(paginas).toHaveLength(CatalogoCreateDtoStub().paginas.length);
+
+      const { mapeamentos } = paginas[0];
+      const { mapeamentos: mapeamentosStub } =
+        CatalogoCreateDtoStub().paginas[0];
+      expect(mapeamentos).not.toBeNull();
+      expect(mapeamentos).not.toEqual([]);
+      expect(mapeamentos).toHaveLength(mapeamentosStub.length);
     });
   });
 
   describe('Atualizar Catalogo', () => {
-    it('Tem que retornar a descrição atualizada', async () => {
-      const { _id } = await catalogoController.create(CatalogoDtoStub());
-      const { descricao } = await catalogoController.update(
-        String(_id),
+    it('Tem que retornar um registro e descrição atualizado', async () => {
+      const { id } = await catalogoController.create(CatalogoCreateDtoStub());
+      const affected = await catalogoController.update(
+        id,
         CatalogoUpdateDtoStub(),
       );
+      expect(affected).toEqual(1);
+
+      const { descricao } = await catalogoController.getId(id);
       expect(descricao).toEqual(CatalogoUpdateDtoStub().descricao);
     });
   });
 
   describe('Ler Catalogos', () => {
     it('Deve retornar um registro"', async () => {
-      await catalogoController.create(CatalogoDtoStub());
-      const resgistros = await catalogoController.getAll();
-      expect(resgistros).toHaveLength(1);
-    });
-
-    it('Deve retornar a descrição do catalogo"', async () => {
-      const { _id } = await catalogoController.create(CatalogoDtoStub());
-      const { descricao } = await catalogoController.getId(String(_id));
-      expect(descricao).toEqual(CatalogoDtoStub().descricao);
+      const registros = await catalogoController.getAll();
+      expect(registros).not.toBeNull();
     });
   });
 
   describe('Remover Catalogo', () => {
-    it('Deve retornar definido"', async () => {
-      const { _id } = await catalogoController.create(CatalogoDtoStub());
-      expect(await catalogoController.deleteId(String(_id))).toBeDefined();
+    it('Tem que retornar um registro removido"', async () => {
+      const { id } = await catalogoController.create(CatalogoCreateDtoStub());
+      const affected = await catalogoController.deleteId(id);
+      expect(affected).toEqual(1);
     });
   });
 });

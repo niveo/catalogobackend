@@ -1,53 +1,63 @@
-import { Model } from 'mongoose';
-import { CatalogoPaginaMapeamento } from '../schema/catalogo-pagina-mapemanto.schema';
-import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import {
   CatalogoPaginaMapeamentoDto,
   CreateCatalogoPaginaMapeamentoDto,
   UpdateCatalogoPaginaMapeamentoDto,
 } from '../dtos';
-import { RegistroNaoLocalizadoError } from '../../common';
+import { CatalogoPaginaMapeamento } from '../entities/catalogo-pagina-mapeamento.entity';
 
 @Injectable()
 export class CatalogoPaginaMapeamentoService {
   constructor(
-    @InjectModel(CatalogoPaginaMapeamento.name)
-    private readonly model: Model<CatalogoPaginaMapeamento>,
+    @InjectRepository(CatalogoPaginaMapeamento)
+    private catalogoRepository: Repository<CatalogoPaginaMapeamento>,
   ) {}
 
-  async getAll(
-    idCatalogoPagina: string,
-  ): Promise<CatalogoPaginaMapeamentoDto[]> {
-    const query = this.model.find({ catalogoPagina: idCatalogoPagina });
-    const entities = await query.exec();
-    return entities;
+  async getAll(idCatalogo: number): Promise<CatalogoPaginaMapeamentoDto[]> {
+    return this.catalogoRepository.find({
+      where: {
+        catalogoPagina: {
+          id: idCatalogo,
+        },
+      },
+    });
+  }
+
+  async getAll2(): Promise<CatalogoPaginaMapeamentoDto[]> {
+    return this.catalogoRepository.find();
   }
 
   create(
-    catalogoCreateDto: CreateCatalogoPaginaMapeamentoDto,
+    createCatalogoPaginaMapeamentoDto: CreateCatalogoPaginaMapeamentoDto,
   ): Promise<CatalogoPaginaMapeamentoDto> {
-    return new this.model(catalogoCreateDto).save();
+    return this.catalogoRepository.save(createCatalogoPaginaMapeamentoDto);
   }
 
-  async getId(id: string): Promise<CatalogoPaginaMapeamentoDto> {
-    const registro = await this.model.findById(id);
-    if (!registro) throw new RegistroNaoLocalizadoError();
-    return registro;
+  async getId(id: number): Promise<CatalogoPaginaMapeamentoDto> {
+    return this.catalogoRepository.findOneByOrFail({
+      id: id,
+    });
   }
 
-  async deleteId(id: string): Promise<any> {
-    const registro = await this.model.findByIdAndDelete(id);
-    if (!registro) throw new RegistroNaoLocalizadoError();
-    return registro;
+  async deleteId(id: number): Promise<number> {
+    return (
+      await this.catalogoRepository.softDelete({
+        id: id,
+      })
+    ).affected;
   }
 
   async update(
-    id: string,
-    updateCatalogoDto: UpdateCatalogoPaginaMapeamentoDto,
-  ) {
-    await this.model.findByIdAndUpdate(id, updateCatalogoDto, {
-      returnDocument: 'after',
-    });
+    id: number,
+    updateCatalogoPaginaMapeamentoDto: UpdateCatalogoPaginaMapeamentoDto,
+  ): Promise<number> {
+    return (
+      await this.catalogoRepository.update(
+        { id: id },
+        updateCatalogoPaginaMapeamentoDto,
+      )
+    ).affected;
   }
 }

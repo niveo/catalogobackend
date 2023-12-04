@@ -1,14 +1,17 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
-import mongoose from 'mongoose';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { IsBoolean, IsDefined, IsNotEmpty, IsString } from 'class-validator';
+import { CatalogoPaginaDto } from './catalogo-pagina.dto';
+import { Exclude } from 'class-transformer';
 
 export class CatalogoDto {
   @ApiProperty({
-    type: String,
+    type: Number,
     readOnly: true,
   })
-  _id?: mongoose.Schema.Types.ObjectId;
+  id?: number;
 
+  @IsDefined()
+  @IsString()
   @IsNotEmpty()
   @ApiProperty({
     required: true,
@@ -16,6 +19,7 @@ export class CatalogoDto {
   })
   descricao: string;
 
+  @IsBoolean()
   @IsNotEmpty()
   @ApiProperty({
     description:
@@ -25,4 +29,27 @@ export class CatalogoDto {
     type: Boolean,
   })
   ativo: boolean = false;
+
+  @Exclude()
+  @ApiHideProperty()
+  cadastrado?: Date;
+
+  @Exclude()
+  @ApiHideProperty()
+  atualizado?: Date;
+
+  @Exclude()
+  @ApiHideProperty()
+  removido?: Date;
+
+  @Exclude()
+  @ApiHideProperty()
+  versao?: number;
+
+  @ApiProperty({
+    required: false,
+    type: CatalogoPaginaDto,
+    isArray: true,
+  })
+  paginas?: CatalogoPaginaDto[];
 }

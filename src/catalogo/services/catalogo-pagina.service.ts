@@ -1,55 +1,55 @@
-import { Model } from 'mongoose';
-import { CatalogoPagina } from '../schema/catalogo-pagina.schema';
-import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import {
   CatalogoPaginaDto,
   CreateCatalogoPaginaDto,
   UpdateCatalogoPaginaDto,
 } from '../dtos';
-import { RegistroNaoLocalizadoError } from '../../common';
-import { CatalogoService } from './catalogo.service';
+import { CatalogoPagina } from '../entities/catalogo-pagina.entity';
 
 @Injectable()
 export class CatalogoPaginaService {
   constructor(
-    @InjectModel(CatalogoPagina.name)
-    private readonly model: Model<CatalogoPagina>,
-
-    private readonly catalogoService: CatalogoService,
+    @InjectRepository(CatalogoPagina)
+    private readonly catalogoRepository: Repository<CatalogoPagina>,
   ) {}
 
-  async getAll(id: string): Promise<CatalogoPaginaDto[]> {
-    const paginas = await this.catalogoService.getIdWithPaginas(id);
-    return this.model.find({
-      _id: { $in: paginas },
+  async getAll(idCatalogo: number): Promise<CatalogoPaginaDto[]> {
+    return this.catalogoRepository.find({
+      where: {
+        catalogo: {
+          id: idCatalogo,
+        },
+      },
     });
   }
 
   create(
     catalogoCreateDto: CreateCatalogoPaginaDto,
   ): Promise<CatalogoPaginaDto> {
-    return new this.model(catalogoCreateDto).save();
+    return this.catalogoRepository.save(catalogoCreateDto);
   }
 
-  async getId(id: string): Promise<CatalogoPaginaDto> {
-    const registro = await this.model.findById(id);
-    if (!registro) throw new RegistroNaoLocalizadoError();
-    return registro;
+  async getId(id: number): Promise<CatalogoPaginaDto> {
+    return this.catalogoRepository.findOneByOrFail({
+      id: id,
+    });
   }
 
-  async deleteId(id: string): Promise<any> {
-    const registro = await this.model.findByIdAndDelete(id);
-    if (!registro) throw new RegistroNaoLocalizadoError();
-    return registro;
+  async deleteId(id: number): Promise<number> {
+    return (
+      await this.catalogoRepository.softDelete({
+        id: id,
+      })
+    ).affected;
   }
 
   async update(
-    id: string,
+    id: number,
     updateCatalogoDto: UpdateCatalogoPaginaDto,
-  ): Promise<CatalogoPaginaDto> {
-    return await this.model.findByIdAndUpdate(id, updateCatalogoDto, {
-      returnDocument: 'after',
-    });
+  ): Promise<number> {
+    return (await this.catalogoRepository.update({ id: id }, updateCatalogoDto))
+      .affected;
   }
 }

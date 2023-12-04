@@ -3,16 +3,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Catalogo, CatalogoPagina } from '../entities';
 import { CommonModule } from '../../common.module';
 import { DataSource, EntityNotFoundError } from 'typeorm';
-import { CatalogoPaginaService } from './catalogo-pagina.service';
 import { CatalogoPaginaCreateDtoStub } from '../tests/stubs/catalogo-pagina-create.dto.stub';
-import { CatalogoService } from './catalogo.service';
 import { CatalogoPaginaUpdateDtoStub } from '../tests/stubs/catalogo-pagina-update.dto.stub';
+import { CatalogoPaginaController } from './catalogo-pagina.controller';
+import { CatalogoService } from '../services/catalogo.service';
+import { CatalogoPaginaService } from '../services/catalogo-pagina.service';
 import { CatalogoDto } from '../dtos';
 
-describe('CatalogoPaginaService', () => {
-  let catalogoPaginaService: CatalogoPaginaService;
-  let newCatalgo: CatalogoDto;
+describe('CatalogoPaginaController', () => {
   let dataSource: DataSource;
+  let catalogoPaginaController: CatalogoPaginaController;
+  let newCatalgo: CatalogoDto;
 
   beforeAll(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -21,10 +22,11 @@ describe('CatalogoPaginaService', () => {
         TypeOrmModule.forFeature([Catalogo, CatalogoPagina]),
       ],
       providers: [CatalogoPaginaService, CatalogoService],
+      controllers: [CatalogoPaginaController],
     }).compile();
 
-    catalogoPaginaService = app.get<CatalogoPaginaService>(
-      CatalogoPaginaService,
+    catalogoPaginaController = app.get<CatalogoPaginaController>(
+      CatalogoPaginaController,
     );
 
     dataSource = app.get<DataSource>(DataSource);
@@ -43,7 +45,7 @@ describe('CatalogoPaginaService', () => {
   });
 
   it('should be defined', () => {
-    expect(catalogoPaginaService).toBeDefined();
+    expect(catalogoPaginaController).toBeDefined();
   });
 
   describe('Salvar Catalogo Pagina', () => {
@@ -52,7 +54,7 @@ describe('CatalogoPaginaService', () => {
         CatalogoPaginaCreateDtoStub(newCatalgo);
 
       const { pagina, catalogo, mapeamentos } =
-        await catalogoPaginaService.create(catalogoPaginaCreateDtoStub);
+        await catalogoPaginaController.create(catalogoPaginaCreateDtoStub);
 
       expect(pagina).toEqual(1);
       expect(catalogo).not.toBeNull();
@@ -67,18 +69,18 @@ describe('CatalogoPaginaService', () => {
 
   describe('Atualizar Catalogo Pagina', () => {
     it('Tem que retornar um registro e pagina atualizada', async () => {
-      const { id } = await catalogoPaginaService.create(
+      const { id } = await catalogoPaginaController.create(
         CatalogoPaginaCreateDtoStub(newCatalgo),
       );
 
       const catalogoPaginaUpdateDtoStub = CatalogoPaginaUpdateDtoStub();
-      const affected = await catalogoPaginaService.update(
+      const affected = await catalogoPaginaController.update(
         id,
         catalogoPaginaUpdateDtoStub,
       );
       expect(affected).toEqual(1);
 
-      const { pagina } = await catalogoPaginaService.getId(id);
+      const { pagina } = await catalogoPaginaController.getId(id);
 
       expect(pagina).toEqual(catalogoPaginaUpdateDtoStub.pagina);
     });
@@ -86,7 +88,7 @@ describe('CatalogoPaginaService', () => {
 
   describe('Ler Paginas Catalogos ', () => {
     it('Deve retornar registros do stub"', async () => {
-      const registros = await catalogoPaginaService.getAll(newCatalgo.id);
+      const registros = await catalogoPaginaController.getAll(newCatalgo.id);
       expect(registros).not.toBeNull();
       expect(registros).toHaveLength(2);
     });
@@ -94,19 +96,19 @@ describe('CatalogoPaginaService', () => {
 
   describe('Remover Catalogo Pagina', () => {
     it('Tem que retornar um registro removido"', async () => {
-      const { id } = await catalogoPaginaService.create(
+      const { id } = await catalogoPaginaController.create(
         CatalogoPaginaCreateDtoStub(newCatalgo),
       );
-      const affected = await catalogoPaginaService.deleteId(id);
+      const affected = await catalogoPaginaController.deleteId(id);
       expect(affected).toEqual(1);
     });
 
     it('Não pode retornar erro da busca do registro removido', async () => {
-      const { id } = await catalogoPaginaService.create(
+      const { id } = await catalogoPaginaController.create(
         CatalogoPaginaCreateDtoStub(newCatalgo),
       );
-      await catalogoPaginaService.deleteId(id);
-      await expect(catalogoPaginaService.getId(id)).rejects.toThrow(
+      await catalogoPaginaController.deleteId(id);
+      await expect(catalogoPaginaController.getId(id)).rejects.toThrow(
         EntityNotFoundError,
       );
     });
