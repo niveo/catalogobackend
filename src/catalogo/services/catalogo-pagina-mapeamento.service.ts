@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import {
   CatalogoPaginaMapeamentoDto,
   CreateCatalogoPaginaMapeamentoDto,
@@ -41,19 +41,23 @@ export class CatalogoPaginaMapeamentoService {
     });
   }
 
-  async deleteId(id: number): Promise<UpdateResult> {
-    return await this.catalogoRepository.softDelete({
-      id: id,
-    });
+  async deleteId(id: number): Promise<number> {
+    return (
+      await this.catalogoRepository.softDelete({
+        id: id,
+      })
+    ).affected;
   }
 
   async update(
     id: number,
     updateCatalogoPaginaMapeamentoDto: UpdateCatalogoPaginaMapeamentoDto,
-  ): Promise<UpdateResult> {
-    return await this.catalogoRepository.update(
-      { id: id },
-      updateCatalogoPaginaMapeamentoDto,
-    );
+  ): Promise<number> {
+    return (
+      await this.catalogoRepository.update(
+        { id: id },
+        updateCatalogoPaginaMapeamentoDto,
+      )
+    ).affected;
   }
 }

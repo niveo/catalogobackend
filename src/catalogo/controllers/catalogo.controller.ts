@@ -4,11 +4,15 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
   Put,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -22,11 +26,11 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UpdateResult } from 'typeorm';
 import { MediaType } from '../../common';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
 import { CatalogoService } from '../services/catalogo.service';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiTags('catalogo')
 @Controller('catalogo')
@@ -41,26 +45,28 @@ export class CatalogoController {
   })
   @ApiProduces(MediaType.APPLICATION_JSON)
   @ApiConsumes(MediaType.APPLICATION_JSON)
-  @Post()
   @ApiBody({
     type: CreateCatalogoDto,
     required: true,
     description: 'Corpo do catalogo para inclusão',
   })
+  @UsePipes(ValidationPipe)
+  @HttpCode(HttpStatus.CREATED)
+  @Post()
   create(@Body() catalogoCreateDto: CreateCatalogoDto): Promise<CatalogoDto> {
     return this.service.create(catalogoCreateDto);
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @ApiProduces(MediaType.APPLICATION_JSON)
   @ApiConsumes(MediaType.APPLICATION_JSON)
   @ApiOperation({ summary: 'Carregar registros' })
+  @UsePipes(ValidationPipe)
+  @HttpCode(HttpStatus.OK)
   @Get()
   async getAll(): Promise<CatalogoDto[]> {
     return this.service.getAll();
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({ summary: 'Carregar registro por id' })
   @ApiProduces(MediaType.APPLICATION_JSON)
   @ApiConsumes(MediaType.TEXT_PLAIN)
@@ -69,6 +75,8 @@ export class CatalogoController {
     required: true,
     type: Number,
   })
+  @UsePipes(ValidationPipe)
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
   async getId(@Param('id', ParseIntPipe) id: number): Promise<CatalogoDto> {
     return this.service.getId(id);
@@ -76,7 +84,6 @@ export class CatalogoController {
 
   @ApiOperation({ summary: 'Atualizar registro por id' })
   @ApiResponse({ status: 200, description: 'Registro atualizado com sucesso.' })
-  @Put(':id')
   @ApiBody({
     type: UpdateCatalogoDto,
     required: true,
@@ -88,10 +95,13 @@ export class CatalogoController {
     type: Number,
   })
   @ApiProduces(MediaType.APPLICATION_JSON)
+  @UsePipes(ValidationPipe)
+  @HttpCode(HttpStatus.OK)
+  @Put(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCatalogoDto: UpdateCatalogoDto,
-  ): Promise<UpdateResult> {
+  ): Promise<number> {
     return this.service.update(id, updateCatalogoDto);
   }
 
@@ -103,8 +113,10 @@ export class CatalogoController {
     required: true,
     type: Number,
   })
+  @UsePipes(ValidationPipe)
+  @HttpCode(HttpStatus.OK)
   @Delete(':id')
-  async deleteId(@Param('id', ParseIntPipe) id: number): Promise<UpdateResult> {
+  async deleteId(@Param('id', ParseIntPipe) id: number): Promise<number> {
     return await this.service.deleteId(id);
   }
 }

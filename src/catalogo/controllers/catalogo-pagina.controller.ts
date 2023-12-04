@@ -22,7 +22,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UpdateResult } from 'typeorm';
 import { MediaType, RegistroNaoLocalizadoError } from '../../common';
 import {
   CatalogoPaginaDto,
@@ -96,7 +95,7 @@ export class CatalogoPaginaController {
   update(
     @Param('id') id: number,
     @Body() updateCatalogoDto: UpdateCatalogoPaginaDto,
-  ): Promise<UpdateResult> {
+  ): Promise<number> {
     return this.service.update(id, updateCatalogoDto);
   }
 

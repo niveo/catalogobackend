@@ -42,7 +42,6 @@ describe('Catalogo', () => {
       const { body } = await request(app.getHttpServer())
         .get('/catalogo')
         .set('Accept', 'application/json')
-        //.set('Authorization', 'foo')
         .expect('Content-Type', /json/)
         .expect(200);
       expect(body).toEqual([

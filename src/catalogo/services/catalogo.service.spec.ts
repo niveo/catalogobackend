@@ -53,7 +53,7 @@ describe('CatalogoService', () => {
   describe('Atualizar Catalogo', () => {
     it('Tem que retornar um registro e descrição atualizado', async () => {
       const { id } = await catalogoService.create(CatalogoCreateDtoStub());
-      const { affected } = await catalogoService.update(
+      const affected = await catalogoService.update(
         id,
         CatalogoUpdateDtoStub(),
       );
@@ -74,7 +74,7 @@ describe('CatalogoService', () => {
   describe('Remover Catalogo', () => {
     it('Tem que retornar um registro removido', async () => {
       const { id } = await catalogoService.create(CatalogoCreateDtoStub());
-      const { affected } = await catalogoService.deleteId(id);
+      const affected = await catalogoService.deleteId(id);
       expect(affected).toEqual(1);
     });
 

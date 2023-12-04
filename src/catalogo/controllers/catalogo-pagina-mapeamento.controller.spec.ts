@@ -104,7 +104,7 @@ describe('CatalogoPaginaMapeamentoController', () => {
 
       const catalogoPaginaUpdateDtoStub =
         CatalogoPaginaMapeamentoUpdateDtoStub();
-      const { affected } = await catalogoPaginaMapeamentoController.update(
+      const affected = await catalogoPaginaMapeamentoController.update(
         id,
         catalogoPaginaUpdateDtoStub,
       );
@@ -147,8 +147,7 @@ describe('CatalogoPaginaMapeamentoController', () => {
       const { id } = await catalogoPaginaMapeamentoController.create(
         CatalogoPaginaMapeamentoCreateDtoStub(newCatalgoPagina),
       );
-      const { affected } =
-        await catalogoPaginaMapeamentoController.deleteId(id);
+      const affected = await catalogoPaginaMapeamentoController.deleteId(id);
       expect(affected).toEqual(1);
     });
 

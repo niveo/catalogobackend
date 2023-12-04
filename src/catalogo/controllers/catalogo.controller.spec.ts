@@ -55,7 +55,7 @@ describe('CatalogoController', () => {
   describe('Atualizar Catalogo', () => {
     it('Tem que retornar um registro e descrição atualizado', async () => {
       const { id } = await catalogoController.create(CatalogoCreateDtoStub());
-      const { affected } = await catalogoController.update(
+      const affected = await catalogoController.update(
         id,
         CatalogoUpdateDtoStub(),
       );
@@ -76,7 +76,7 @@ describe('CatalogoController', () => {
   describe('Remover Catalogo', () => {
     it('Tem que retornar um registro removido"', async () => {
       const { id } = await catalogoController.create(CatalogoCreateDtoStub());
-      const { affected } = await catalogoController.deleteId(id);
+      const affected = await catalogoController.deleteId(id);
       expect(affected).toEqual(1);
     });
   });

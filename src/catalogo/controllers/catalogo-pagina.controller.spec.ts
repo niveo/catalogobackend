@@ -74,7 +74,7 @@ describe('CatalogoPaginaController', () => {
       );
 
       const catalogoPaginaUpdateDtoStub = CatalogoPaginaUpdateDtoStub();
-      const { affected } = await catalogoPaginaController.update(
+      const affected = await catalogoPaginaController.update(
         id,
         catalogoPaginaUpdateDtoStub,
       );
@@ -99,7 +99,7 @@ describe('CatalogoPaginaController', () => {
       const { id } = await catalogoPaginaController.create(
         CatalogoPaginaCreateDtoStub(newCatalgo),
       );
-      const { affected } = await catalogoPaginaController.deleteId(id);
+      const affected = await catalogoPaginaController.deleteId(id);
       expect(affected).toEqual(1);
     });
 

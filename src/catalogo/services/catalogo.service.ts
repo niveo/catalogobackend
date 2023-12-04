@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
 import { Catalogo } from '../entities/catalogo.entity';
 
@@ -25,16 +25,19 @@ export class CatalogoService {
     });
   }
 
-  async deleteId(id: number): Promise<UpdateResult> {
-    return await this.catalogoRepository.softDelete({
-      id: id,
-    });
+  async deleteId(id: number): Promise<number> {
+    return (
+      await this.catalogoRepository.softDelete({
+        id: id,
+      })
+    ).affected;
   }
 
   async update(
     id: number,
     updateCatalogoDto: UpdateCatalogoDto,
-  ): Promise<UpdateResult> {
-    return await this.catalogoRepository.update(id, updateCatalogoDto);
+  ): Promise<number> {
+    return (await this.catalogoRepository.update(id, updateCatalogoDto))
+      .affected;
   }
 }

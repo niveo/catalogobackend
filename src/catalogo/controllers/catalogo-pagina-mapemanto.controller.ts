@@ -22,7 +22,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UpdateResult } from 'typeorm';
 import { CatalogoPaginaMapeamentoService } from '../../catalogo/services/catalogo-pagina-mapeamento.service';
 import { MediaType, RegistroNaoLocalizadoError } from '../../common';
 import {
@@ -98,7 +97,7 @@ export class CatalogoPaginaMapeamentoController {
   update(
     @Param('id') id: number,
     @Body() updateCatalogoDto: UpdateCatalogoPaginaMapeamentoDto,
-  ): Promise<UpdateResult> {
+  ): Promise<number> {
     return this.service.update(id, updateCatalogoDto);
   }
 
