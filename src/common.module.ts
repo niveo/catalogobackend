@@ -6,17 +6,11 @@ import {
   CatalogoPagina,
   CatalogoPaginaMapeamento,
 } from './catalogo/entities';
-import { envDevelopment, envProduction } from './environments/environment';
+import { envVercel } from './environments/environment';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: envProduction
-        ? '.env'
-        : envDevelopment
-          ? '.env.development'
-          : '.env.teste',
-    }),
+    ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => {
         console.log('PGHOST: ', config.get('PGHOST'));
@@ -30,8 +24,8 @@ import { envDevelopment, envProduction } from './environments/environment';
           database: config.get('PGDATABASE'),
           entities: [Catalogo, CatalogoPagina, CatalogoPaginaMapeamento],
           //Setting synchronize: true shouldn't be used in production - otherwise you can lose production data.
-          synchronize: !envProduction,
-          ssl: envProduction,
+          synchronize: !envVercel,
+          ssl: envVercel,
           logging: false,
         };
       },
