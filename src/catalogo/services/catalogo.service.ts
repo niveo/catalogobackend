@@ -40,4 +40,6 @@ export class CatalogoService {
     return (await this.catalogoRepository.update(id, updateCatalogoDto))
       .affected;
   }
+
+  importarCatalogoPdf() {}
 }

@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
   UsePipes,
@@ -32,6 +33,7 @@ import { MediaType } from '../../common';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
 import { CatalogoService } from '../services/catalogo.service';
 import { AuthorizationGuard } from '../../authorization';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiBearerAuth()
 @UseGuards(AuthorizationGuard)
@@ -123,5 +125,11 @@ export class CatalogoController {
   @Delete(':id')
   async deleteId(@Param('id', ParseIntPipe) id: number): Promise<number> {
     return await this.service.deleteId(id);
+  }
+
+  @Post('importar')
+  @UseInterceptors(FileInterceptor('file'))
+  importarCatalogo(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
   }
 }
