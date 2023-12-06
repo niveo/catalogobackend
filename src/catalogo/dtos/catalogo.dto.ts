@@ -46,6 +46,14 @@ export class CatalogoDto {
   @ApiHideProperty()
   versao?: number;
 
+  @Exclude()
+  @ApiHideProperty()
+  userId?: string;
+
+  @Exclude()
+  @ApiHideProperty()
+  identificador?: string;
+
   @ApiProperty({
     required: false,
     type: CatalogoPaginaDto,

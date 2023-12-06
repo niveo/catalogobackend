@@ -11,7 +11,7 @@ export class CatalogoPagina extends BaseEntity {
   @ManyToOne(() => Catalogo, (metadata) => metadata.paginas, {
     nullable: false,
   })
-  catalogo: Catalogo;
+  catalogo?: Catalogo;
 
   @OneToMany(
     () => CatalogoPaginaMapeamento,
@@ -21,5 +21,5 @@ export class CatalogoPagina extends BaseEntity {
       cascade: true,
     },
   )
-  mapeamentos: CatalogoPaginaMapeamento[];
+  mapeamentos?: CatalogoPaginaMapeamento[];
 }

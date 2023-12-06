@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
 import { Catalogo } from '../entities/catalogo.entity';
 import ImageKit from 'imagekit';
+import { ClsService } from 'nestjs-cls';
 
 @Injectable()
 export class CatalogoService {
@@ -13,26 +14,38 @@ export class CatalogoService {
 
     @Inject(ImageKit.name)
     private readonly imageKit: ImageKit,
+    private readonly cls: ClsService,
   ) {}
 
   async getAll(): Promise<CatalogoDto[]> {
-    return await this.catalogoRepository.find();
+    const userId = this.cls.get('userId');
+    return await this.catalogoRepository.find({
+      where: {
+        userId: userId,
+      },
+    });
   }
 
   create(catalogoCreateDto: CreateCatalogoDto): Promise<CatalogoDto> {
+    const userId = this.cls.get('userId');
+    catalogoCreateDto.userId = userId;
     return this.catalogoRepository.save(catalogoCreateDto);
   }
 
   async getId(id: number): Promise<CatalogoDto> {
+    const userId = this.cls.get('userId');
     return this.catalogoRepository.findOneByOrFail({
       id: id,
+      userId: userId,
     });
   }
 
   async deleteId(id: number): Promise<number> {
+    const userId = this.cls.get('userId');
     return (
       await this.catalogoRepository.softDelete({
         id: id,
+        userId: userId,
       })
     ).affected;
   }
@@ -48,23 +61,36 @@ export class CatalogoService {
   async importarCatalogo(
     descricao: string,
     ativo: boolean,
-    file: Array<Express.Multer.File>,
+    files: Express.Multer.File[],
   ) {
-    await this.catalogoRepository.manager.transaction(
+    const userId = this.cls.get('userId');
+
+    const catalogo = await this.catalogoRepository.manager.transaction(
       async (transactionalEntityManager) => {
-        let catalogoEntity = new Catalogo();
+        const catalogoEntity = new Catalogo();
         catalogoEntity.descricao = descricao;
         catalogoEntity.ativo = ativo;
+        catalogoEntity.paginas = [];
+        catalogoEntity.userId = userId;
 
-        catalogoEntity =
-          await transactionalEntityManager.save<Catalogo>(catalogoEntity);
+        files.forEach((_, index) => {
+          catalogoEntity.paginas.push({
+            pagina: index,
+          });
+        });
+
+        return await transactionalEntityManager.save<Catalogo>(catalogoEntity);
       },
     );
 
-    /*await this.imageKit.upload({
-      folder: `catalogo/${catalogoEntity.id}`,
-      fileName: file.fieldname,
-      file: file.buffer,
-    });*/
+    catalogo.paginas?.forEach(async (p, index) => {
+      await this.imageKit.upload({
+        folder: `catalogo/${catalogo.identificador}`,
+        fileName: String(p.id),
+        file: files[index].buffer,
+      });
+    });
+
+    return catalogo.id;
   }
 }

@@ -9,10 +9,12 @@ import { Catalogo, CatalogoPagina, CatalogoPaginaMapeamento } from './entities';
 import { CatalogoPaginaMapeamentoService } from './services/catalogo-pagina-mapeamento.service';
 import { CatalogoPaginaService } from './services/catalogo-pagina.service';
 import { CatalogoService } from './services/catalogo.service';
+import { ClsModule } from 'nestjs-cls';
 
 @Module({
   imports: [
     ConfigModule,
+    ClsModule.forFeature(),
     TypeOrmModule.forFeature([
       Catalogo,
       CatalogoPagina,

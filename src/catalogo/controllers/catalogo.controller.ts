@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   HttpStatus,
   Param,
@@ -12,13 +13,13 @@ import {
   Post,
   Put,
   Query,
-  UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -66,14 +67,16 @@ export class CatalogoController {
     return this.service.create(catalogoCreateDto);
   }
 
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Importar arquivos para um novo catalogo' })
   @Post('importar')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FilesInterceptor('files'))
   importarCatalogo(
-    @UploadedFile() file: Array<Express.Multer.File>,
+    @UploadedFiles() files: Express.Multer.File[],
     @Query('descricao') descricao: string,
     @Query('ativo', ParseBoolPipe) ativo: boolean,
   ) {
-    this.service.importarCatalogo(descricao, ativo, file);
+    return this.service.importarCatalogo(descricao, ativo, files);
   }
 
   @ApiProduces(MediaType.APPLICATION_JSON)
