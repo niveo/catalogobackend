@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
 import { Catalogo } from '../entities/catalogo.entity';
 import ImageKit from 'imagekit';
-import { fromBuffer } from 'pdf2pic';
 
 @Injectable()
 export class CatalogoService {
@@ -49,7 +48,7 @@ export class CatalogoService {
   async importarCatalogo(
     descricao: string,
     ativo: boolean,
-    file: Express.Multer.File,
+    file: Array<Express.Multer.File>,
   ) {
     await this.catalogoRepository.manager.transaction(
       async (transactionalEntityManager) => {
@@ -59,11 +58,6 @@ export class CatalogoService {
 
         catalogoEntity =
           await transactionalEntityManager.save<Catalogo>(catalogoEntity);
-
-        const registros = await fromBuffer(file.buffer, {
-          saveFilename: '',
-        }).bulk(-1);
-        registros.forEach((f) => console.log(f));
       },
     );
 

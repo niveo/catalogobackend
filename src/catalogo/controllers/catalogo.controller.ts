@@ -37,8 +37,8 @@ import { MediaType } from '../../common';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
 import { CatalogoService } from '../services/catalogo.service';
 
-//@ApiBearerAuth()
-//@UseGuards(AuthorizationGuard)
+@ApiBearerAuth()
+@UseGuards(AuthorizationGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiTags('catalogo')
@@ -69,7 +69,7 @@ export class CatalogoController {
   @Post('importar')
   @UseInterceptors(FileInterceptor('file'))
   importarCatalogo(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: Array<Express.Multer.File>,
     @Query('descricao') descricao: string,
     @Query('ativo', ParseBoolPipe) ativo: boolean,
   ) {
