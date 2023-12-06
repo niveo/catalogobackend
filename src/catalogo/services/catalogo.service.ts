@@ -1,14 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
 import { Catalogo } from '../entities/catalogo.entity';
+import ImageKit from 'imagekit';
+import { fromBuffer } from 'pdf2pic';
 
 @Injectable()
 export class CatalogoService {
   constructor(
     @InjectRepository(Catalogo)
     private catalogoRepository: Repository<Catalogo>,
+
+    @Inject(ImageKit.name)
+    private readonly imageKit: ImageKit,
   ) {}
 
   async getAll(): Promise<CatalogoDto[]> {
@@ -39,5 +44,33 @@ export class CatalogoService {
   ): Promise<number> {
     return (await this.catalogoRepository.update(id, updateCatalogoDto))
       .affected;
+  }
+
+  async importarCatalogo(
+    descricao: string,
+    ativo: boolean,
+    file: Express.Multer.File,
+  ) {
+    await this.catalogoRepository.manager.transaction(
+      async (transactionalEntityManager) => {
+        let catalogoEntity = new Catalogo();
+        catalogoEntity.descricao = descricao;
+        catalogoEntity.ativo = ativo;
+
+        catalogoEntity =
+          await transactionalEntityManager.save<Catalogo>(catalogoEntity);
+
+        const registros = await fromBuffer(file.buffer, {
+          saveFilename: '',
+        }).bulk(-1);
+        registros.forEach((f) => console.log(f));
+      },
+    );
+
+    /*await this.imageKit.upload({
+      folder: `catalogo/${catalogoEntity.id}`,
+      fileName: file.fieldname,
+      file: file.buffer,
+    });*/
   }
 }

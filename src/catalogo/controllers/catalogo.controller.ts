@@ -7,14 +7,18 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseBoolPipe,
   ParseIntPipe,
   Post,
   Put,
+  Query,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -28,13 +32,13 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { AuthorizationGuard } from '../../authorization';
 import { MediaType } from '../../common';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
 import { CatalogoService } from '../services/catalogo.service';
-import { AuthorizationGuard } from '../../authorization';
 
-@ApiBearerAuth()
-@UseGuards(AuthorizationGuard)
+//@ApiBearerAuth()
+//@UseGuards(AuthorizationGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiTags('catalogo')
@@ -60,6 +64,16 @@ export class CatalogoController {
   @Post()
   create(@Body() catalogoCreateDto: CreateCatalogoDto): Promise<CatalogoDto> {
     return this.service.create(catalogoCreateDto);
+  }
+
+  @Post('importar')
+  @UseInterceptors(FileInterceptor('file'))
+  importarCatalogo(
+    @UploadedFile() file: Express.Multer.File,
+    @Query('descricao') descricao: string,
+    @Query('ativo', ParseBoolPipe) ativo: boolean,
+  ) {
+    this.service.importarCatalogo(descricao, ativo, file);
   }
 
   @ApiProduces(MediaType.APPLICATION_JSON)
