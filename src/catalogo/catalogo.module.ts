@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { imageKitProvider } from '../providers/imagekit.provider';
 import { CatalogoPaginaMapeamentoController } from './controllers/catalogo-pagina-mapemanto.controller';
 import { CatalogoPaginaController } from './controllers/catalogo-pagina.controller';
 import { CatalogoController } from './controllers/catalogo.controller';
@@ -10,6 +12,7 @@ import { CatalogoService } from './services/catalogo.service';
 
 @Module({
   imports: [
+    ConfigModule,
     TypeOrmModule.forFeature([
       Catalogo,
       CatalogoPagina,
@@ -25,6 +28,7 @@ import { CatalogoService } from './services/catalogo.service';
     CatalogoService,
     CatalogoPaginaService,
     CatalogoPaginaMapeamentoService,
+    ...imageKitProvider,
   ],
 })
 export class CatalogoModule {}

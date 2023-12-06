@@ -32,10 +32,13 @@
     "docker-cli-js": "^2.10.0",
     "express-oauth2-jwt-bearer": "^1.6.0",
     "helmet": "^7.1.0",
+    "imagekit": "^4.1.4",
     "nocache": "^4.0.0",
+    "pdf2pic": "^3.1.0",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "sharp-pdf": "^0.1.3",
     "typeorm": "^0.3.17"
   },
   "devDependencies": {
