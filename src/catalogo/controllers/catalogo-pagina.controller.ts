@@ -6,6 +6,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -41,7 +42,9 @@ export class CatalogoPaginaController {
   @ApiConsumes(MediaType.APPLICATION_JSON)
   @ApiOperation({ summary: 'Carregar registros' })
   @Get()
-  getAll(@Query() idCatalogo: number): Promise<CatalogoPaginaDto[]> {
+  getAll(
+    @Query('idCatalogo', ParseIntPipe) idCatalogo: number,
+  ): Promise<CatalogoPaginaDto[]> {
     return this.service.getAll(idCatalogo);
   }
 
@@ -54,7 +57,9 @@ export class CatalogoPaginaController {
     type: Number,
   })
   @Get(':id')
-  async getId(@Param('id') id: number): Promise<CatalogoPaginaDto> {
+  async getId(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CatalogoPaginaDto> {
     return await this.service.getId(id);
   }
 
@@ -67,7 +72,7 @@ export class CatalogoPaginaController {
     type: Number,
   })
   @Delete(':id')
-  async deleteId(@Param('id') id: number) {
+  async deleteId(@Param('id', ParseIntPipe) id: number) {
     try {
       return await this.service.deleteId(id);
     } catch (e) {
@@ -93,7 +98,7 @@ export class CatalogoPaginaController {
   })
   @ApiProduces(MediaType.APPLICATION_JSON)
   update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateCatalogoDto: UpdateCatalogoPaginaDto,
   ): Promise<number> {
     return this.service.update(id, updateCatalogoDto);

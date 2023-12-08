@@ -73,23 +73,29 @@ export class CatalogoService {
         catalogoEntity.paginas = [];
         catalogoEntity.userId = userId;
 
-        files.forEach((_, index) => {
+        let index = 0;
+        for (const file of files) {
+          console.log(file.mimetype);
+          
+          const ret = await this.imageKit.upload({
+            folder: `catalogo/${catalogoEntity.identificador}`,
+            fileName: String(index),
+            file: files[index].buffer,
+          });
+
           catalogoEntity.paginas.push({
             pagina: index,
+            size: ret.size,
+            height: ret.height,
+            width: ret.width,
+            name: ret.name,
           });
-        });
+          index++;
+        }
 
         return await transactionalEntityManager.save<Catalogo>(catalogoEntity);
       },
     );
-
-    catalogo.paginas?.forEach(async (p, index) => {
-      await this.imageKit.upload({
-        folder: `catalogo/${catalogo.identificador}`,
-        fileName: String(p.id),
-        file: files[index].buffer,
-      });
-    });
 
     return catalogo.id;
   }

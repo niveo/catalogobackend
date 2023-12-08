@@ -8,6 +8,18 @@ export class CatalogoPagina extends BaseEntity {
   @Column('int')
   pagina: number;
 
+  @Column('int')
+  size: number;
+
+  @Column('int')
+  height: number;
+
+  @Column('int')
+  width: number;
+
+  @Column('text')
+  name: string;
+
   @ManyToOne(() => Catalogo, (metadata) => metadata.paginas, {
     nullable: false,
   })
