@@ -1,6 +1,6 @@
-import { Exclude } from 'class-transformer';
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from './../model/base-entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Produto extends BaseEntity {
@@ -9,7 +9,6 @@ export class Produto extends BaseEntity {
   })
   descricao: string;
 
-  @Exclude()
   @Index({
     unique: true,
   })
@@ -17,4 +16,14 @@ export class Produto extends BaseEntity {
     nullable: false,
   })
   referencia: string;
+
+  @Exclude()
+  @Index()
+  @Column('text', {
+    nullable: false,
+  })
+  userId: string;
+
+  @Column('boolean', { default: false })
+  ativo: boolean = false;
 }

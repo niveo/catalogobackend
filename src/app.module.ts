@@ -7,11 +7,13 @@ import { ClsModule, ClsModuleFactoryOptions } from 'nestjs-cls';
 import { jwtDecode } from 'jwt-decode';
 import { v5 as uuidv5 } from 'uuid';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ProdutoModule } from './produto/produto.module';
 
 @Module({
   imports: [
     CommonModule,
     CatalogoModule,
+    ProdutoModule,
     ClsModule.forRootAsync({
       useFactory(configService: ConfigService) {
         const ca: ClsModuleFactoryOptions = {

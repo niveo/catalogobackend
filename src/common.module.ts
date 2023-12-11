@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Catalogo, CatalogoPagina, CatalogoPaginaMapeamento } from './entities';
-import { envVercel } from './environments/environment';
 import { Produto } from './entities/produto.entity';
+import { envVercel } from './environments/environment';
 
 @Module({
   imports: [
