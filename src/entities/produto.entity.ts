@@ -10,7 +10,9 @@ export class Produto extends BaseEntity {
   descricao: string;
 
   @Exclude()
-  @Index()
+  @Index({
+    unique: true,
+  })
   @Column('text', {
     nullable: false,
   })
