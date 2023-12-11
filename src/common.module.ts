@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Catalogo, CatalogoPagina, CatalogoPaginaMapeamento } from './entities';
 import { envVercel } from './environments/environment';
+import { Produto } from './entities/produto.entity';
 
 @Module({
   imports: [
@@ -18,7 +19,12 @@ import { envVercel } from './environments/environment';
           url: config.get('DATABASE_URL'),
           password: config.get('PGPASSWORD'),
           database: config.get('PGDATABASE'),
-          entities: [Catalogo, CatalogoPagina, CatalogoPaginaMapeamento],
+          entities: [
+            Produto,
+            Catalogo,
+            CatalogoPagina,
+            CatalogoPaginaMapeamento,
+          ],
           //Setting synchronize: true shouldn't be used in production - otherwise you can lose production data.
           synchronize: !envVercel,
           ssl: envVercel,

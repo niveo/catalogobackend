@@ -87,7 +87,7 @@ export class CatalogoService {
           const ret = await this.imageKit.upload({
             folder: `catalogo/${catalogoEntity.identificador}`,
             fileName: String(index),
-            file: files[index].buffer,
+            file: files[index - 1].buffer,
           });
           catalogoEntity.paginas.push({
             pagina: index,
