@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, VirtualColumn } from 'typeorm';
 import { BaseEntity } from '../../model/base-entity';
 import { CatalogoPaginaMapeamento } from './catalogo-pagina-mapeamento.entity';
 import { Catalogo } from './catalogo.entity';
@@ -34,4 +34,10 @@ export class CatalogoPagina extends BaseEntity {
     },
   )
   mapeamentos?: CatalogoPaginaMapeamento[];
+
+  @VirtualColumn({
+    query: (alias) =>
+      `SELECT COUNT("id") FROM "catalogo_pagina_mapeamento" WHERE "catalogoPaginaId" = ${alias}.id`,
+  })
+  mapeados?: number = 0;
 }

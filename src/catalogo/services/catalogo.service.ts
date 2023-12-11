@@ -58,6 +58,15 @@ export class CatalogoService {
       .affected;
   }
 
+  catalogoLazy(id: number): Promise<CatalogoDto> {
+    const userId = this.cls.get('userId');
+    const qb = this.catalogoRepository.createQueryBuilder('catalogo');
+    qb.leftJoinAndSelect('catalogo.paginas', 'paginas');
+    qb.where('catalogo.id = :id', { id: id });
+    qb.andWhere('catalogo.userId = :userId', { userId: userId });
+    return qb.getOneOrFail();
+  }
+
   async importarCatalogo(
     descricao: string,
     ativo: boolean,
@@ -75,14 +84,11 @@ export class CatalogoService {
 
         let index = 0;
         for (const file of files) {
-          console.log(file.mimetype);
-          
           const ret = await this.imageKit.upload({
             folder: `catalogo/${catalogoEntity.identificador}`,
             fileName: String(index),
             file: files[index].buffer,
           });
-
           catalogoEntity.paginas.push({
             pagina: index,
             size: ret.size,

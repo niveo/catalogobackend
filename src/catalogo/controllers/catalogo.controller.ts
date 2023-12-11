@@ -103,6 +103,23 @@ export class CatalogoController {
     return this.service.getId(id);
   }
 
+  @ApiOperation({ summary: 'Carregar registro por id' })
+  @ApiProduces(MediaType.APPLICATION_JSON)
+  @ApiConsumes(MediaType.TEXT_PLAIN)
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+  })
+  @UsePipes(ValidationPipe)
+  @HttpCode(HttpStatus.OK)
+  @Get('lazy/:id')
+  async catalogoLazy(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CatalogoDto> {
+    return this.service.catalogoLazy(id);
+  }
+
   @ApiOperation({ summary: 'Atualizar registro por id' })
   @ApiResponse({ status: 200, description: 'Registro atualizado com sucesso.' })
   @ApiBody({

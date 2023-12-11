@@ -60,4 +60,12 @@ export class CatalogoPaginaDto {
     isArray: true,
   })
   mapeamentos?: CatalogoPaginaMapeamentoDto[];
+
+  @IsNumber()
+  @ApiProperty({
+    type: Number,
+    readOnly: true,
+    default: 0,
+  })
+  mapeados?: number = 0;
 }
