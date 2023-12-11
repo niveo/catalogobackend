@@ -103,7 +103,7 @@ export class CatalogoController {
     return this.service.getId(id);
   }
 
-  @ApiOperation({ summary: 'Carregar registro por id' })
+  @ApiOperation({ summary: 'Carregar registro por id com paginas em lazy' })
   @ApiProduces(MediaType.APPLICATION_JSON)
   @ApiConsumes(MediaType.TEXT_PLAIN)
   @ApiParam({
@@ -114,10 +114,10 @@ export class CatalogoController {
   @UsePipes(ValidationPipe)
   @HttpCode(HttpStatus.OK)
   @Get('lazy/:id')
-  async catalogoLazy(
+  async getCatalogoLazy(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<CatalogoDto> {
-    return this.service.catalogoLazy(id);
+    return this.service.getCatalogoLazy(id);
   }
 
   @ApiOperation({ summary: 'Atualizar registro por id' })

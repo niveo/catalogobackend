@@ -58,7 +58,7 @@ export class CatalogoService {
       .affected;
   }
 
-  catalogoLazy(id: number): Promise<CatalogoDto> {
+  getCatalogoLazy(id: number): Promise<CatalogoDto> {
     const userId = this.cls.get('userId');
     const qb = this.catalogoRepository.createQueryBuilder('catalogo');
     qb.leftJoinAndSelect('catalogo.paginas', 'paginas');
@@ -82,7 +82,7 @@ export class CatalogoService {
         catalogoEntity.paginas = [];
         catalogoEntity.userId = userId;
 
-        let index = 0;
+        let index = 1;
         for (const file of files) {
           const ret = await this.imageKit.upload({
             folder: `catalogo/${catalogoEntity.identificador}`,

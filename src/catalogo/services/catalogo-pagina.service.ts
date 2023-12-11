@@ -45,6 +45,13 @@ export class CatalogoPaginaService {
     ).affected;
   }
 
+  getPaginaLazy(id: number): Promise<CatalogoPaginaDto> {
+    const qb = this.catalogoRepository.createQueryBuilder('pagina');
+    qb.leftJoinAndSelect('pagina.mapeamentos', 'mapeamentos');
+    qb.where('pagina.id = :id', { id: id });
+    return qb.getOneOrFail();
+  }
+
   async update(
     id: number,
     updateCatalogoDto: UpdateCatalogoPaginaDto,

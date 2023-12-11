@@ -63,6 +63,21 @@ export class CatalogoPaginaController {
     return await this.service.getId(id);
   }
 
+  @ApiOperation({ summary: 'Carregar registro por id com mapeamentos em lazy' })
+  @ApiProduces(MediaType.APPLICATION_JSON)
+  @ApiConsumes(MediaType.TEXT_PLAIN)
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+  })
+  @Get('lazy/:id')
+  async getPaginaLazy(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CatalogoPaginaDto> {
+    return await this.service.getPaginaLazy(id);
+  }
+
   @ApiOperation({ summary: 'Remover registro por id' })
   @ApiResponse({ status: 200, description: 'Registro removido com sucesso.' })
   @ApiConsumes(MediaType.TEXT_PLAIN)

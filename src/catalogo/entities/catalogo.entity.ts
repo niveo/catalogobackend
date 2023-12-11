@@ -1,8 +1,8 @@
+import { Exclude } from 'class-transformer';
 import { Column, Entity, Index, OneToMany } from 'typeorm';
+import { v4 } from 'uuid';
 import { BaseEntity } from '../../model/base-entity';
 import { CatalogoPagina } from './catalogo-pagina.entity';
-import { v4 } from 'uuid';
-import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Catalogo extends BaseEntity {
