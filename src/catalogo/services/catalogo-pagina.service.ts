@@ -6,7 +6,7 @@ import {
   CreateCatalogoPaginaDto,
   UpdateCatalogoPaginaDto,
 } from '../dtos';
-import { CatalogoPagina } from '../entities/catalogo-pagina.entity';
+import { CatalogoPagina } from '../../entities/catalogo-pagina.entity';
 
 @Injectable()
 export class CatalogoPaginaService {

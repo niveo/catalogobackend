@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
-import { BaseEntity } from '../../model/base-entity';
+import { BaseEntity } from './../model/base-entity';
 import { CatalogoPagina } from './catalogo-pagina.entity';
 
 @Entity()

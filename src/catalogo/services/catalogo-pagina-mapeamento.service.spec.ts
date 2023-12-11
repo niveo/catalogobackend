@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource, EntityNotFoundError } from 'typeorm';
-import { CommonModule } from '../../common.module';
-import { CatalogoPaginaDto } from '../dtos';
 import {
   Catalogo,
   CatalogoPagina,
   CatalogoPaginaMapeamento,
-} from '../entities';
+} from 'src/entities';
+import { DataSource, EntityNotFoundError } from 'typeorm';
+import { CommonModule } from '../../common.module';
+import { CatalogoPaginaDto } from '../dtos';
 import { CatalogoPaginaMapeamentoCreateDtoStub } from '../tests/stubs/catalogo-pagina-mapeamento-create.dto.stub';
 import { CatalogoPaginaMapeamentoUpdateDtoStub } from '../tests/stubs/catalogo-pagina-mapeamento-update.dto.stub';
 import { CatalogoPaginaMapeamentoService } from './catalogo-pagina-mapeamento.service';

@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
-import { Catalogo } from '../entities/catalogo.entity';
 import ImageKit from 'imagekit';
 import { ClsService } from 'nestjs-cls';
+import { Repository } from 'typeorm';
+import { Catalogo } from '../../entities/catalogo.entity';
+import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
 
 @Injectable()
 export class CatalogoService {

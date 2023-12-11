@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, VirtualColumn } from 'typeorm';
-import { BaseEntity } from '../../model/base-entity';
+import { BaseEntity } from './../model/base-entity';
 import { CatalogoPaginaMapeamento } from './catalogo-pagina-mapeamento.entity';
 import { Catalogo } from './catalogo.entity';
 
