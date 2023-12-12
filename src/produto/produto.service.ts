@@ -39,6 +39,14 @@ export class ProdutoService {
     });
   }
 
+  async getReferencia(referencia: string): Promise<ProdutoDto> {
+    const userId = this.cls.get('userId');
+    return this.produtoRepository.findOneByOrFail({
+      referencia: referencia,
+      userId: userId,
+    });
+  }
+
   async deleteId(id: number): Promise<number> {
     const userId = this.cls.get('userId');
     return (

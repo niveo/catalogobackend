@@ -105,6 +105,23 @@ export class ProdutoController {
     return this.service.getId(id);
   }
 
+  @ApiOperation({ summary: 'Carregar registro por referencia' })
+  @ApiProduces(MediaType.APPLICATION_JSON)
+  @ApiConsumes(MediaType.TEXT_PLAIN)
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+  })
+  @UsePipes(ValidationPipe)
+  @HttpCode(HttpStatus.OK)
+  @Get('referencia/:id')
+  async getReferencia(
+    @Param('referencia') referencia: string,
+  ): Promise<ProdutoDto> {
+    return this.service.getReferencia(referencia);
+  }
+
   @ApiOperation({ summary: 'Atualizar registro por id' })
   @ApiResponse({ status: 200, description: 'Registro atualizado com sucesso.' })
   @ApiBody({
