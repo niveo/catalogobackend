@@ -7,9 +7,11 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseBoolPipe,
   ParseIntPipe,
   Post,
   Put,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -70,8 +72,12 @@ export class ProdutoController {
   @ApiOperation({ summary: 'Importar uma lista de produtos em csv' })
   @Post('importar')
   @UseInterceptors(FilesInterceptor('files'))
-  importarProdutos(@UploadedFiles() files: Express.Multer.File[]) {
-    return this.service.importarProdutos(files);
+  importarProdutos(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Query('comCabecalho', ParseBoolPipe) comCabecalho: boolean,
+    @Query('separador') separador: string,
+  ) {
+    return this.service.importarProdutos(files, comCabecalho, separador);
   }
 
   @ApiProduces(MediaType.APPLICATION_JSON)

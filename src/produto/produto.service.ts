@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { CreateProdutoDto } from './dtos/create-produto.dto';
 import { ProdutoDto } from './dtos/produto.dto';
 import { UpdateProdutoDto } from './dtos/update-produto.dto';
-
+import { parse } from 'csv-parse/sync';
 @Injectable()
 export class ProdutoService {
   constructor(
@@ -56,7 +56,33 @@ export class ProdutoService {
     return (await this.produtoRepository.update(id, updateProdutoDto)).affected;
   }
 
-  importarProdutos(files: Express.Multer.File[]) {
-    throw new Error('Method not implemented.');
+  async importarProdutos(
+    files: Express.Multer.File[],
+    comCabecalho: boolean,
+    separador = ';',
+  ) {
+    const userId = this.cls.get('userId');
+    const registros: any[] = await parse(files[0].buffer);
+    const mapeados = registros
+      .map((e: any[], i: number) => {
+        if (!(comCabecalho && i === 0)) {
+          const reg = e[0].split(separador);
+          if (!reg[1]) return null;
+          return {
+            referencia: reg[0],
+            descricao: reg[1],
+            ativo: reg[2] === '1',
+            userId: userId,
+          };
+        }
+      })
+      .filter((f) => f);
+    await this.produtoRepository
+      .createQueryBuilder()
+      .insert()
+      .into(Produto)
+      .values(mapeados)
+      .orIgnore()
+      .execute();
   }
 }
