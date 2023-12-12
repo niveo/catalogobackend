@@ -23,6 +23,15 @@ export class ProdutoService {
     });
   }
 
+  async produtosPorIds(produtos: number[]): Promise<ProdutoDto[]> {
+    return await this.produtoRepository
+      .createQueryBuilder('produto')
+      .where('produto.id IN (:...ids)"', {
+        ids: produtos,
+      })
+      .getMany();
+  }
+
   create(createProdutoDto: CreateProdutoDto): Promise<ProdutoDto> {
     const userId = this.cls.get('userId');
     createProdutoDto.userId = userId;

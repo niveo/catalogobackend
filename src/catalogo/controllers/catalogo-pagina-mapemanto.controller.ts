@@ -56,6 +56,16 @@ export class CatalogoPaginaMapeamentoController {
     return this.service.getAll(idCatalogoPagina);
   }
 
+  @ApiProduces(MediaType.APPLICATION_JSON)
+  @ApiConsumes(MediaType.APPLICATION_JSON)
+  @ApiOperation({ summary: 'Carregar registros dos produtos mapeados' })
+  @Get('lista/:idCatalogoPagina')
+  getMapeamentoProdutoCordenadas(
+    @Param('idCatalogoPagina', ParseIntPipe) idCatalogoPagina: number,
+  ): Promise<CatalogoPaginaMapeamentoDto[]> {
+    return this.service.getMapeamentoProdutoCordenadas(idCatalogoPagina);
+  }
+
   @ApiOperation({ summary: 'Carregar registro por id' })
   @ApiProduces(MediaType.APPLICATION_JSON)
   @ApiConsumes(MediaType.TEXT_PLAIN)
@@ -69,6 +79,29 @@ export class CatalogoPaginaMapeamentoController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<CatalogoPaginaMapeamentoDto> {
     return await this.service.getId(id);
+  }
+
+  @ApiOperation({ summary: 'Remover registro mapeado' })
+  @ApiResponse({ status: 200, description: 'Registro removido com sucesso.' })
+  @ApiConsumes(MediaType.TEXT_PLAIN)
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+  })
+  @Delete('deleteMapeado')
+  async deleteProdutoCordenada(
+    @Query('id', ParseIntPipe) id: number,
+    @Query('produto', ParseIntPipe) produto: number,
+  ) {
+    try {
+      return await this.service.deleteProdutoCordenada(id, produto);
+    } catch (e) {
+      console.error(e);
+      if (e instanceof RegistroNaoLocalizadoError)
+        throw new NotFoundException(e.message);
+      else throw new InternalServerErrorException();
+    }
   }
 
   @ApiOperation({ summary: 'Remover registro por id' })
