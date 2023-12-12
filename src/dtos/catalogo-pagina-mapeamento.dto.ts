@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNotEmptyObject,
+  IsNumber,
+} from 'class-validator';
 import { CatalogoPaginaDto } from './catalogo-pagina.dto';
-import { IsNotEmpty, IsNotEmptyObject, IsNumber } from 'class-validator';
 import { ProdutoDto } from './produto.dto';
 
 export class CatalogoPaginaMapeamentoDto {
@@ -53,12 +58,12 @@ export class CatalogoPaginaMapeamentoDto {
   })
   height: number;
 
-  @IsNotEmptyObject()
+  @IsArray()
   @ApiProperty({
     required: true,
     type: () => ProdutoDto,
   })
-  produto: ProdutoDto;
+  produtos: ProdutoDto[];
 
   @IsNotEmptyObject()
   @ApiProperty({

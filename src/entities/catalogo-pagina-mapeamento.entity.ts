@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  Unique,
-} from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 import { BaseEntity } from './../model/base-entity';
 import { CatalogoPagina } from './catalogo-pagina.entity';
 import { Produto } from './produto.entity';
@@ -30,16 +23,9 @@ export class CatalogoPaginaMapeamento extends BaseEntity {
   @Column('double precision', { nullable: false })
   height: number;
 
-  @OneToOne(() => Produto, {
-    nullable: false,
-    onDelete: 'RESTRICT',
-    createForeignKeyConstraints: false
-  })
-  @JoinColumn({
-    name: 'produtoId',
-    referencedColumnName: 'id',
-  })
-  produto: Produto;
+  @ManyToMany(() => Produto)
+  @JoinTable()
+  produtos: Produto[];
 
   @ManyToOne(() => CatalogoPagina, (metadata) => metadata.mapeamentos, {
     nullable: false,

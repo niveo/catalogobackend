@@ -28,8 +28,6 @@ export class CatalogoPaginaMapeamentoService {
   create(
     createCatalogoPaginaMapeamentoDto: CreateCatalogoPaginaMapeamentoDto,
   ): Promise<CatalogoPaginaMapeamentoDto> {
-    console.log(createCatalogoPaginaMapeamentoDto);
-
     return this.catalogoRepository.save(createCatalogoPaginaMapeamentoDto);
   }
 
