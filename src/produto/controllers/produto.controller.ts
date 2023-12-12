@@ -6,6 +6,8 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  InternalServerErrorException,
+  NotFoundException,
   Param,
   ParseBoolPipe,
   ParseIntPipe,
@@ -32,12 +34,11 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { EntityNotFoundError } from 'typeorm';
 import { AuthorizationGuard } from '../../authorization';
 import { MediaType } from '../../common';
-import { ProdutoDto } from '../dtos/produto.dto';
 import { ProdutoService } from '../produto.service';
-import { CreateProdutoDto } from '../dtos/create-produto.dto';
-import { UpdateProdutoDto } from '../dtos/update-produto.dto';
+import { CreateProdutoDto, ProdutoDto, UpdateProdutoDto } from 'src/dtos';
 
 @ApiBearerAuth()
 @UseGuards(AuthorizationGuard)
@@ -115,11 +116,19 @@ export class ProdutoController {
   })
   @UsePipes(ValidationPipe)
   @HttpCode(HttpStatus.OK)
-  @Get('referencia/:id')
+  @Get('referencia/:referencia')
   async getReferencia(
     @Param('referencia') referencia: string,
   ): Promise<ProdutoDto> {
-    return this.service.getReferencia(referencia);
+    try {
+      return await this.service.getReferencia(referencia);
+    } catch (e) {
+      if (e instanceof EntityNotFoundError) {
+        throw new NotFoundException();
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   @ApiOperation({ summary: 'Atualizar registro por id' })

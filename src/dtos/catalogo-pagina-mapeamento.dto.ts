@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CatalogoPaginaDto } from './catalogo-pagina.dto';
-import { IsDecimal, IsNotEmpty, IsNotEmptyObject } from 'class-validator';
+import { IsNotEmpty, IsNotEmptyObject, IsNumber } from 'class-validator';
+import { ProdutoDto } from './produto.dto';
 
 export class CatalogoPaginaMapeamentoDto {
   @ApiProperty({
@@ -9,7 +10,7 @@ export class CatalogoPaginaMapeamentoDto {
   })
   id?: number;
 
-  @IsDecimal()
+  @IsNumber()
   @IsNotEmpty()
   @ApiProperty({
     required: true,
@@ -17,40 +18,47 @@ export class CatalogoPaginaMapeamentoDto {
   })
   inicialPosicalX: number;
 
-  @IsDecimal()
+  @IsNumber()
   @ApiProperty({
     required: true,
     type: Number,
   })
   finalPosicalX: number;
 
-  @IsDecimal()
+  @IsNumber()
   @ApiProperty({
     required: true,
     type: Number,
   })
   inicialPosicalY: number;
 
-  @IsDecimal()
+  @IsNumber()
   @ApiProperty({
     required: true,
     type: Number,
   })
   finalPosicalY: number;
 
-  @IsDecimal()
+  @IsNumber()
   @ApiProperty({
     required: true,
     type: Number,
   })
   width: number;
 
-  @IsDecimal()
+  @IsNumber()
   @ApiProperty({
     required: true,
     type: Number,
   })
   height: number;
+
+  @IsNotEmptyObject()
+  @ApiProperty({
+    required: true,
+    type: () => ProdutoDto,
+  })
+  produto: ProdutoDto;
 
   @IsNotEmptyObject()
   @ApiProperty({

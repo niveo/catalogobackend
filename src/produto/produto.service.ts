@@ -3,10 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ClsService } from 'nestjs-cls';
 import { Produto } from 'src/entities/produto.entity';
 import { Repository } from 'typeorm';
-import { CreateProdutoDto } from './dtos/create-produto.dto';
-import { ProdutoDto } from './dtos/produto.dto';
-import { UpdateProdutoDto } from './dtos/update-produto.dto';
 import { parse } from 'csv-parse/sync';
+import { CreateProdutoDto, ProdutoDto, UpdateProdutoDto } from 'src/dtos';
 @Injectable()
 export class ProdutoService {
   constructor(

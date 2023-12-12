@@ -5,7 +5,7 @@ import {
   CatalogoPaginaMapeamentoDto,
   CreateCatalogoPaginaMapeamentoDto,
   UpdateCatalogoPaginaMapeamentoDto,
-} from '../dtos';
+} from 'src/dtos';
 import { CatalogoPaginaMapeamento } from '../../entities/catalogo-pagina-mapeamento.entity';
 
 @Injectable()
@@ -25,13 +25,11 @@ export class CatalogoPaginaMapeamentoService {
     });
   }
 
-  async getAll2(): Promise<CatalogoPaginaMapeamentoDto[]> {
-    return this.catalogoRepository.find();
-  }
-
   create(
     createCatalogoPaginaMapeamentoDto: CreateCatalogoPaginaMapeamentoDto,
   ): Promise<CatalogoPaginaMapeamentoDto> {
+    console.log(createCatalogoPaginaMapeamentoDto);
+
     return this.catalogoRepository.save(createCatalogoPaginaMapeamentoDto);
   }
 

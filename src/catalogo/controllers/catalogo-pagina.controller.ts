@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -10,8 +11,11 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
@@ -28,9 +32,13 @@ import {
   CatalogoPaginaDto,
   CreateCatalogoPaginaDto,
   UpdateCatalogoPaginaDto,
-} from '../dtos';
+} from 'src/dtos';
 import { CatalogoPaginaService } from './../services/catalogo-pagina.service';
+import { AuthorizationGuard } from 'src/authorization';
 
+@ApiBearerAuth()
+@UseGuards(AuthorizationGuard)
+@UseInterceptors(ClassSerializerInterceptor)
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiTags('catalogoPagina')
 @Controller('catalogo_pagina')

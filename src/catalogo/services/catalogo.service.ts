@@ -4,7 +4,7 @@ import ImageKit from 'imagekit';
 import { ClsService } from 'nestjs-cls';
 import { Repository } from 'typeorm';
 import { Catalogo } from '../../entities/catalogo.entity';
-import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../dtos';
+import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from 'src/dtos';
 
 @Injectable()
 export class CatalogoService {
