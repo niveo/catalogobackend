@@ -1,15 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
-import { carregarSwaggerModule } from './catalogo/catalogo-swagger.document';
+import { carregarCatalogoSwaggerModule } from './catalogo/catalogo-swagger.document';
 //import * as nocache from 'nocache';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './common';
+import { carregarProdutoSwaggerModule } from './produto/produto-swagger.document';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  carregarSwaggerModule(app);
+  carregarCatalogoSwaggerModule(app);
+  carregarProdutoSwaggerModule(app);
 
   //app.setGlobalPrefix('api');
 

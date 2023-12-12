@@ -55,4 +55,8 @@ export class ProdutoService {
   ): Promise<number> {
     return (await this.produtoRepository.update(id, updateProdutoDto)).affected;
   }
+
+  importarProdutos(files: Express.Multer.File[]) {
+    throw new Error('Method not implemented.');
+  }
 }
