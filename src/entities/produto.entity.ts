@@ -1,4 +1,4 @@
-import { Column, Entity, Index } from 'typeorm';
+import { Column, Entity, Index, VirtualColumn } from 'typeorm';
 import { BaseEntity } from './../model/base-entity';
 import { Exclude } from 'class-transformer';
 
@@ -26,4 +26,13 @@ export class Produto extends BaseEntity {
 
   @Column('boolean', { default: false })
   ativo: boolean = false;
+
+  @VirtualColumn({
+    query: (alias) =>
+      `SELECT count("produtoId") 
+      FROM public.catalogo_pagina_mapeamento_produtos_produto
+      WHERE "produtoId" = ${alias}.id
+      GROUP BY "produtoId"`,
+  })
+  mapeados?: number = 0;
 }

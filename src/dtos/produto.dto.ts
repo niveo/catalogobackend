@@ -1,6 +1,12 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsDefined, IsNotEmpty, IsString } from 'class-validator';
 import { Exclude } from 'class-transformer';
+import {
+  IsBoolean,
+  IsDefined,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
 export class ProdutoDto {
   @ApiProperty({
@@ -57,4 +63,12 @@ export class ProdutoDto {
   @Exclude()
   @ApiHideProperty()
   userId?: string;
+
+  @IsNumber()
+  @ApiProperty({
+    type: Number,
+    readOnly: true,
+    default: 0,
+  })
+  mapeados?: number = 0;
 }
