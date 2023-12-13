@@ -30,17 +30,15 @@ export class CatalogoPaginaMapeamentoService {
   getMapeamentoProdutoCordenadas(
     idCatalogo: number,
   ): Promise<CatalogoPaginaMapeamentoDto[]> {
+    console.log(idCatalogo);
+
     return this.catalogoRepository
       .createQueryBuilder('cpm')
-      .leftJoin(
-        'cpm.catalogoPagina',
-        'catalogoPagina',
-        'catalogoPagina.id = :id',
-        {
-          id: idCatalogo,
-        },
-      )
+      .leftJoin('cpm.catalogoPagina', 'catalogoPagina')
       .leftJoinAndSelect('cpm.produtos', 'produtos')
+      .where('catalogoPagina.id = :id', {
+        id: idCatalogo,
+      })
       .cache(true)
       .getMany();
   }

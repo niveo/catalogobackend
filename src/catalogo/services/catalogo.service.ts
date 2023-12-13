@@ -2,9 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import ImageKit from 'imagekit';
 import { ClsService } from 'nestjs-cls';
+import { Observable, defer, from, map } from 'rxjs';
+import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from 'src/dtos';
 import { Repository } from 'typeorm';
 import { Catalogo } from '../../entities/catalogo.entity';
-import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from 'src/dtos';
 
 @Injectable()
 export class CatalogoService {
@@ -17,13 +18,18 @@ export class CatalogoService {
     private readonly cls: ClsService,
   ) {}
 
-  async getAll(): Promise<CatalogoDto[]> {
+  getAll(): Observable<CatalogoDto[]> {
     const userId = this.cls.get('userId');
-    return await this.catalogoRepository.find({
-      where: {
-        userId: userId,
-      },
-    });
+    return defer(() =>
+      from(
+        this.catalogoRepository.find({
+          where: {
+            userId: userId,
+            ativo: true,
+          },
+        }),
+      ),
+    );
   }
 
   create(catalogoCreateDto: CreateCatalogoDto): Promise<CatalogoDto> {
@@ -40,14 +46,16 @@ export class CatalogoService {
     });
   }
 
-  async deleteId(id: number): Promise<number> {
+  deleteId(id: number): Observable<number> {
     const userId = this.cls.get('userId');
-    return (
-      await this.catalogoRepository.softDelete({
-        id: id,
-        userId: userId,
-      })
-    ).affected;
+    return defer(() =>
+      from(
+        this.catalogoRepository.softDelete({
+          id: id,
+          userId: userId,
+        }),
+      ),
+    ).pipe(map(({ affected }) => affected));
   }
 
   async update(

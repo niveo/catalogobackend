@@ -36,6 +36,7 @@ import { AuthorizationGuard } from '../../authorization';
 import { MediaType } from '../../common';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from 'src/dtos';
 import { CatalogoService } from '../services/catalogo.service';
+import { Observable } from 'rxjs';
 
 @ApiBearerAuth()
 @UseGuards(AuthorizationGuard)
@@ -84,7 +85,7 @@ export class CatalogoController {
   @UsePipes(ValidationPipe)
   @HttpCode(HttpStatus.OK)
   @Get()
-  async getAll(): Promise<CatalogoDto[]> {
+  getAll(): Observable<CatalogoDto[]> {
     return this.service.getAll();
   }
 
@@ -154,7 +155,7 @@ export class CatalogoController {
   @UsePipes(ValidationPipe)
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
-  async deleteId(@Param('id', ParseIntPipe) id: number): Promise<number> {
-    return await this.service.deleteId(id);
+  deleteId(@Param('id', ParseIntPipe) id: number): Observable<number> {
+    return this.service.deleteId(id);
   }
 }

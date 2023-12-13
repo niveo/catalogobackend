@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { parse } from 'csv-parse/sync';
 import { ClsService } from 'nestjs-cls';
+import { CreateProdutoDto, ProdutoDto, UpdateProdutoDto } from 'src/dtos';
 import { Produto } from 'src/entities/produto.entity';
 import { Repository } from 'typeorm';
-import { parse } from 'csv-parse/sync';
-import { CreateProdutoDto, ProdutoDto, UpdateProdutoDto } from 'src/dtos';
 @Injectable()
 export class ProdutoService {
   constructor(
@@ -19,6 +19,7 @@ export class ProdutoService {
     return await this.produtoRepository.find({
       where: {
         userId: userId,
+        ativo: true,
       },
     });
   }
