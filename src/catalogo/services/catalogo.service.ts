@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import ImageKit from 'imagekit';
 import { ClsService } from 'nestjs-cls';
 import { Observable, defer, from, map } from 'rxjs';
-import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from 'src/dtos';
+import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../../dtos';
 import { Repository } from 'typeorm';
 import { Catalogo } from '../../entities/catalogo.entity';
 

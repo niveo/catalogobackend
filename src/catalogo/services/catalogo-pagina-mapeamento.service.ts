@@ -4,7 +4,7 @@ import {
   CatalogoPaginaMapeamentoDto,
   CreateCatalogoPaginaMapeamentoDto,
   UpdateCatalogoPaginaMapeamentoDto,
-} from 'src/dtos';
+} from '../../dtos';
 import { Repository } from 'typeorm';
 import { CatalogoPaginaMapeamento } from '../../entities/catalogo-pagina-mapeamento.entity';
 
@@ -30,8 +30,6 @@ export class CatalogoPaginaMapeamentoService {
   getMapeamentoProdutoCordenadas(
     idCatalogo: number,
   ): Promise<CatalogoPaginaMapeamentoDto[]> {
-    console.log(idCatalogo);
-
     return this.catalogoRepository
       .createQueryBuilder('cpm')
       .leftJoin('cpm.catalogoPagina', 'catalogoPagina')

@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { parse } from 'csv-parse/sync';
 import { ClsService } from 'nestjs-cls';
-import { CreateProdutoDto, ProdutoDto, UpdateProdutoDto } from 'src/dtos';
-import { Produto } from 'src/entities/produto.entity';
+import { CreateProdutoDto, ProdutoDto, UpdateProdutoDto } from '../dtos';
+import { Produto } from '../entities/produto.entity';
 import { Repository } from 'typeorm';
 @Injectable()
 export class ProdutoService {

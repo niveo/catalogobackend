@@ -33,8 +33,8 @@ import {
   CatalogoPaginaMapeamentoDto,
   CreateCatalogoPaginaMapeamentoDto,
   UpdateCatalogoPaginaMapeamentoDto,
-} from 'src/dtos';
-import { AuthorizationGuard } from 'src/authorization';
+} from '../../dtos';
+import { AuthorizationGuard } from '../../authorization';
 
 @ApiBearerAuth()
 @UseGuards(AuthorizationGuard)

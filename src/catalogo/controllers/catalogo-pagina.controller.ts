@@ -32,9 +32,9 @@ import {
   CatalogoPaginaDto,
   CreateCatalogoPaginaDto,
   UpdateCatalogoPaginaDto,
-} from 'src/dtos';
+} from '../../dtos';
 import { CatalogoPaginaService } from './../services/catalogo-pagina.service';
-import { AuthorizationGuard } from 'src/authorization';
+import { AuthorizationGuard } from '../../authorization';
 
 @ApiBearerAuth()
 @UseGuards(AuthorizationGuard)

@@ -22,7 +22,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: [
+      'http://localhost:4200',
+      'https://catalogobackend-niveo-aldiney-mendes-santoss-projects.vercel.app/produto',
+    ],
     methods: ['GET', 'PUT', 'POST', 'DELETE'],
     allowedHeaders: ['Authorization', 'Content-Type'],
     maxAge: 86400,

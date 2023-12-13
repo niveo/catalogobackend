@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Catalogo, CatalogoPagina } from 'src/entities';
+import { Catalogo, CatalogoPagina } from '../../entities';
 import { DataSource, EntityNotFoundError } from 'typeorm';
 import { CommonModule } from '../../common.module';
-import { CatalogoDto } from '../dtos';
+import { CatalogoDto } from '../../dtos';
 import { CatalogoPaginaCreateDtoStub } from '../tests/stubs/catalogo-pagina-create.dto.stub';
 import { CatalogoPaginaUpdateDtoStub } from '../tests/stubs/catalogo-pagina-update.dto.stub';
 import { CatalogoPaginaService } from './catalogo-pagina.service';

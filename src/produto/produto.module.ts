@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClsModule } from 'nestjs-cls';
-import { Produto } from 'src/entities/produto.entity';
+import { Produto } from '../entities/produto.entity';
 import { ProdutoService } from './produto.service';
 import { ProdutoController } from './controllers/produto.controller';
 

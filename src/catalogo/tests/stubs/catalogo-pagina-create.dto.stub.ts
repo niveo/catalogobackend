@@ -1,4 +1,4 @@
-import { CatalogoPaginaDto, ProdutoDto } from 'src/dtos';
+import { CatalogoPaginaDto, ProdutoDto } from '../../../dtos';
 
 export const CatalogoPaginaCreateDtoStub = (
   catalogo: any,

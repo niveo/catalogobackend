@@ -22,13 +22,15 @@ import { ProdutoModule } from './produto/produto.module';
             // ClsMiddleware for all routes
             mount: true,
             setup: (cls, req) => {
-              cls.set(
-                'userId',
-                uuidv5(
-                  jwtDecode(req.headers['authorization']).sub,
-                  configService.get('AUDIENCE'),
-                ),
-              );
+              if (req.headers['authorization']) {
+                cls.set(
+                  'userId',
+                  uuidv5(
+                    jwtDecode(req.headers['authorization']).sub,
+                    configService.get('AUDIENCE'),
+                  ),
+                );
+              }
             },
           },
         };

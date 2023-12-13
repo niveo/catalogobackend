@@ -34,7 +34,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthorizationGuard } from '../../authorization';
 import { MediaType } from '../../common';
-import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from 'src/dtos';
+import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../../dtos';
 import { CatalogoService } from '../services/catalogo.service';
 import { Observable } from 'rxjs';
 

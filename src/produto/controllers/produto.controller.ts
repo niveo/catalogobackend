@@ -38,7 +38,7 @@ import { EntityNotFoundError } from 'typeorm';
 import { AuthorizationGuard } from '../../authorization';
 import { MediaType } from '../../common';
 import { ProdutoService } from '../produto.service';
-import { CreateProdutoDto, ProdutoDto, UpdateProdutoDto } from 'src/dtos';
+import { CreateProdutoDto, ProdutoDto, UpdateProdutoDto } from '../../dtos';
 
 @ApiBearerAuth()
 @UseGuards(AuthorizationGuard)

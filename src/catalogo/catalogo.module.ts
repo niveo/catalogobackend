@@ -6,7 +6,7 @@ import {
   Catalogo,
   CatalogoPagina,
   CatalogoPaginaMapeamento,
-} from 'src/entities';
+} from '../entities';
 import { imageKitProvider } from '../providers/imagekit.provider';
 import { CatalogoPaginaMapeamentoController } from './controllers/catalogo-pagina-mapemanto.controller';
 import { CatalogoPaginaController } from './controllers/catalogo-pagina.controller';
