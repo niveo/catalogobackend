@@ -7,6 +7,11 @@ import { CatalogoPagina } from './catalogo-pagina.entity';
 @Entity()
 export class Catalogo extends BaseEntity {
   @Column('text', {
+    nullable: true,
+  })
+  titulo: string;
+
+  @Column('text', {
     nullable: false,
   })
   descricao: string;
