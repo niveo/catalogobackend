@@ -18,7 +18,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -32,11 +32,11 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Observable } from 'rxjs';
 import { AuthorizationGuard } from '../../authorization';
 import { MediaType } from '../../common';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../../dtos';
 import { CatalogoService } from '../services/catalogo.service';
-import { Observable } from 'rxjs';
 
 @ApiBearerAuth()
 @UseGuards(AuthorizationGuard)
@@ -70,14 +70,32 @@ export class CatalogoController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Importar arquivos para um novo catalogo' })
   @Post('importar')
-  @UseInterceptors(FilesInterceptor('files'))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'files' },
+      { name: 'logo' },
+      { name: 'avatar' },
+    ]),
+  )
   importarCatalogo(
-    @UploadedFiles() files: Express.Multer.File[],
+    @UploadedFiles()
+    files: {
+      files: Express.Multer.File[];
+      logo: Express.Multer.File[];
+      avatar: Express.Multer.File[];
+    },
     @Query('titulo') titulo: string,
     @Query('descricao') descricao: string,
     @Query('ativo', ParseBoolPipe) ativo: boolean,
   ) {
-    return this.service.importarCatalogo(titulo, descricao, ativo, files);
+    return this.service.importarCatalogo(
+      titulo,
+      descricao,
+      ativo,
+      files.files,
+      files.logo,
+      files.avatar,
+    );
   }
 
   @ApiProduces(MediaType.APPLICATION_JSON)

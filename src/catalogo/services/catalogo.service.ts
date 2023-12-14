@@ -80,6 +80,8 @@ export class CatalogoService {
     descricao: string,
     ativo: boolean,
     files: Express.Multer.File[],
+    logo: Express.Multer.File[],
+    avatar: Express.Multer.File[],
   ) {
     const userId = this.cls.get('userId');
 
@@ -91,11 +93,29 @@ export class CatalogoService {
         catalogoEntity.ativo = ativo;
         catalogoEntity.paginas = [];
         catalogoEntity.userId = userId;
-
+        const urlCatalogo = `catalogo/catalogos/${catalogoEntity.identificador}/`;
+        if (logo) {
+          await this.imageKit.upload({
+            folder: urlCatalogo,
+            fileName: logo[0].originalname,
+            file: logo[0].buffer,
+            useUniqueFileName: false,
+          });
+          catalogoEntity.logo = logo[0].originalname;
+        }
+        if (avatar) {
+          await this.imageKit.upload({
+            folder: urlCatalogo,
+            fileName: avatar[0].originalname,
+            file: avatar[0].buffer,
+            useUniqueFileName: false,
+          });
+          catalogoEntity.avatar = avatar[0].originalname;
+        }
         let index = 1;
-        for (const file of files) {
+        while (index <= files.length) {
           const ret = await this.imageKit.upload({
-            folder: `catalogo/${catalogoEntity.identificador}`,
+            folder: `${urlCatalogo}/paginas`,
             fileName: String(index),
             file: files[index - 1].buffer,
           });
