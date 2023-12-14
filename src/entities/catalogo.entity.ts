@@ -11,6 +11,16 @@ export class Catalogo extends BaseEntity {
   })
   descricao: string;
 
+  @Column('text', {
+    nullable: true,
+  })
+  logo: string;
+
+  @Column('text', {
+    nullable: true,
+  })
+  avatar: string;
+
   @Exclude()
   @Index()
   @Column('text', {

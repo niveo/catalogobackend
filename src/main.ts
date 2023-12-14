@@ -22,16 +22,13 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   app.enableCors({
-    origin: [
-      'http://localhost:4200',
-      'https://catalogobackend-niveo-aldiney-mendes-santoss-projects.vercel.app/produto',
-    ],
-    methods: ['GET', 'PUT', 'POST', 'DELETE'],
+    origin: '*',
+    methods: ['*'],
     allowedHeaders: ['Authorization', 'Content-Type'],
     maxAge: 86400,
   });
 
-  app.use(
+  /*app.use(
     helmet({
       hsts: { maxAge: 31536000 },
       frameguard: { action: 'deny' },
@@ -42,7 +39,7 @@ async function bootstrap() {
         },
       },
     }),
-  );
+  );*/
 
   await app.listen(7000);
 }
