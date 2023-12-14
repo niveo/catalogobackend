@@ -45,6 +45,7 @@ export class Catalogo extends BaseEntity {
   @Column('boolean', { default: false })
   ativo: boolean = false;
 
+  //Campo criado para deixar um registro base para novos usuários
   @Exclude()
   @Column('boolean', { default: false })
   sistema: boolean = false;
