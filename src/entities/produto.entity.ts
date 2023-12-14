@@ -27,6 +27,10 @@ export class Produto extends BaseEntity {
   @Column('boolean', { default: false })
   ativo: boolean = false;
 
+  @Exclude()
+  @Column('boolean', { default: false })
+  sistema: boolean = false;
+
   @VirtualColumn({
     query: (alias) =>
       `SELECT count("produtoId") 

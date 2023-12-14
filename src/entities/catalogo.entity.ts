@@ -45,6 +45,10 @@ export class Catalogo extends BaseEntity {
   @Column('boolean', { default: false })
   ativo: boolean = false;
 
+  @Exclude()
+  @Column('boolean', { default: false })
+  sistema: boolean = false;
+
   @OneToMany(() => CatalogoPagina, (metadata) => metadata.catalogo, {
     onDelete: 'CASCADE',
     cascade: true,
