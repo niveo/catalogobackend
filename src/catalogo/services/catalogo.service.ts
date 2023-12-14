@@ -76,6 +76,7 @@ export class CatalogoService {
   }
 
   async importarCatalogo(
+    titulo: string,
     descricao: string,
     ativo: boolean,
     files: Express.Multer.File[],
@@ -85,6 +86,7 @@ export class CatalogoService {
     const catalogo = await this.catalogoRepository.manager.transaction(
       async (transactionalEntityManager) => {
         const catalogoEntity = new Catalogo();
+        catalogoEntity.titulo = titulo;
         catalogoEntity.descricao = descricao;
         catalogoEntity.ativo = ativo;
         catalogoEntity.paginas = [];

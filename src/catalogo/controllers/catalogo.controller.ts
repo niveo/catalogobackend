@@ -73,10 +73,11 @@ export class CatalogoController {
   @UseInterceptors(FilesInterceptor('files'))
   importarCatalogo(
     @UploadedFiles() files: Express.Multer.File[],
+    @Query('titulo') titulo: string,
     @Query('descricao') descricao: string,
     @Query('ativo', ParseBoolPipe) ativo: boolean,
   ) {
-    return this.service.importarCatalogo(descricao, ativo, files);
+    return this.service.importarCatalogo(titulo, descricao, ativo, files);
   }
 
   @ApiProduces(MediaType.APPLICATION_JSON)
