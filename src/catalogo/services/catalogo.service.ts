@@ -38,6 +38,14 @@ export class CatalogoService {
     return this.catalogoRepository.save(catalogoCreateDto);
   }
 
+  createCatalogoUser(
+    catalogoCreateDto: CreateCatalogoDto,
+    userId: string,
+  ): Promise<CatalogoDto> {
+    catalogoCreateDto.userId = userId;
+    return this.catalogoRepository.save(catalogoCreateDto);
+  }
+
   async getId(id: number): Promise<CatalogoDto> {
     const userId = this.cls.get('userId');
     return this.catalogoRepository.findOneByOrFail({

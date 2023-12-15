@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { parse } from 'csv-parse/sync';
 import { ClsService } from 'nestjs-cls';
+import { Repository } from 'typeorm';
 import { CreateProdutoDto, ProdutoDto, UpdateProdutoDto } from '../dtos';
 import { Produto } from '../entities/produto.entity';
-import { Repository } from 'typeorm';
 @Injectable()
 export class ProdutoService {
   constructor(
@@ -39,6 +39,10 @@ export class ProdutoService {
     return this.produtoRepository.save(createProdutoDto);
   }
 
+  createMany(createProdutoDto: CreateProdutoDto[]) {
+    return this.produtoRepository.save(createProdutoDto);
+  }
+
   async getId(id: number): Promise<ProdutoDto> {
     const userId = this.cls.get('userId');
     return this.produtoRepository.findOneByOrFail({
@@ -47,8 +51,15 @@ export class ProdutoService {
     });
   }
 
-  async getReferencia(referencia: string): Promise<ProdutoDto> {
+  getReferencia(referencia: string): Promise<ProdutoDto> {
     const userId = this.cls.get('userId');
+    return this.getReferenciaUsuario(referencia, userId);
+  }
+
+  getReferenciaUsuario(
+    referencia: string,
+    userId: string,
+  ): Promise<ProdutoDto> {
     return this.produtoRepository.findOneByOrFail({
       referencia: referencia,
       userId: userId,

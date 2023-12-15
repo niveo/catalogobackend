@@ -36,5 +36,6 @@ import { CatalogoService } from './services/catalogo.service';
     CatalogoPaginaMapeamentoService,
     ...imageKitProvider,
   ],
+  exports: [CatalogoService],
 })
 export class CatalogoModule {}

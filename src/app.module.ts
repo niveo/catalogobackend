@@ -8,6 +8,7 @@ import { jwtDecode } from 'jwt-decode';
 import { v5 as uuidv5 } from 'uuid';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProdutoModule } from './produto/produto.module';
+import { imageKitProvider } from './providers/imagekit.provider';
 
 @Module({
   imports: [
@@ -40,7 +41,7 @@ import { ProdutoModule } from './produto/produto.module';
       inject: [ConfigService],
     }),
   ],
-  providers: [AppService],
+  providers: [AppService, ...imageKitProvider],
   controllers: [AppController],
 })
 export class AppModule {}
