@@ -23,13 +23,14 @@ export class CatalogoPaginaMapeamento extends BaseEntity {
   @Column('double precision', { nullable: false })
   height: number;
 
-  @ManyToMany(() => Produto)
+  @ManyToMany(() => Produto, {
+    createForeignKeyConstraints: false,
+  })
   @JoinTable()
   produtos: Produto[];
 
   @ManyToOne(() => CatalogoPagina, (metadata) => metadata.mapeamentos, {
-    nullable: false,
-    persistence: false,
+    createForeignKeyConstraints: false,
   })
   catalogoPagina: CatalogoPagina;
 }

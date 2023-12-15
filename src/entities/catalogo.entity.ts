@@ -51,8 +51,8 @@ export class Catalogo extends BaseEntity {
   sistema: boolean = false;
 
   @OneToMany(() => CatalogoPagina, (metadata) => metadata.catalogo, {
-    onDelete: 'CASCADE',
     cascade: true,
+    createForeignKeyConstraints: false,
   })
   paginas: CatalogoPagina[];
 }

@@ -22,6 +22,7 @@ export class CatalogoPagina extends BaseEntity {
 
   @ManyToOne(() => Catalogo, (metadata) => metadata.paginas, {
     nullable: false,
+    createForeignKeyConstraints: false,
   })
   catalogo?: Catalogo;
 
@@ -29,8 +30,8 @@ export class CatalogoPagina extends BaseEntity {
     () => CatalogoPaginaMapeamento,
     (metadata) => metadata.catalogoPagina,
     {
-      onDelete: 'CASCADE',
       cascade: true,
+      createForeignKeyConstraints: false,
     },
   )
   mapeamentos?: CatalogoPaginaMapeamento[];
