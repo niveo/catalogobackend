@@ -1,7 +1,8 @@
-import { Column, Entity, Index, VirtualColumn } from 'typeorm';
+import { Column, Entity, Index, Unique, VirtualColumn } from 'typeorm';
 import { BaseEntity } from './../model/base-entity';
 import { Exclude } from 'class-transformer';
 
+@Unique('UNQ_REFERENCIA_USUARIO', ['referencia', 'userId'])
 @Entity()
 export class Produto extends BaseEntity {
   @Column('text', {
