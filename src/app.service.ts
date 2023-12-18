@@ -51,6 +51,6 @@ export class AppService {
     } catch (e) {
       console.error(e);
     }
-    this.catalogoService.createCatalogoUser(catalogoData[0] as any, id);
+    await this.catalogoService.createCatalogoUser(catalogoData[0] as any, id);
   }
 }
