@@ -54,6 +54,14 @@ export class CatalogoService {
     });
   }
 
+  removerSistema() {
+    const userId = this.cls.get('userId');
+    return this.catalogoRepository.delete({
+      sistema: true,
+      userId: userId,
+    });
+  }
+
   deleteId(id: number): Observable<number> {
     const userId = this.cls.get('userId');
     return defer(() =>
