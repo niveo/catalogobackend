@@ -55,5 +55,6 @@ export class AppService {
       await this.catalogoService.createCatalogoUser(catalogoData[0] as any, id)
     ).id;
     console.log('Catalogo padrão importado ' + idCreate);
+    return idCreate;
   }
 }
