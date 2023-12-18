@@ -25,7 +25,7 @@ import { envVercel } from './environments/environment';
             CatalogoPaginaMapeamento,
           ],
           //Setting synchronize: true shouldn't be used in production - otherwise you can lose production data.
-          synchronize: false,
+          synchronize: true,
           ssl: envVercel,
           logging: false,
         };
