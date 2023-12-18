@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { MigrationInterface, QueryRunner, TableForeignKey } from 'typeorm';
 
 export class AddForeignKeyCatalogoPaginasDeleteCascade1702671669105
@@ -7,7 +8,7 @@ export class AddForeignKeyCatalogoPaginasDeleteCascade1702671669105
     await queryRunner.createForeignKey(
       'catalogo_pagina',
       new TableForeignKey({
-        name: 'FK_CATALOGO_PAGINAS',
+        name: 'FK_' + randomUUID().replaceAll('-', ''),
         referencedTableName: 'catalogo',
         referencedColumnNames: ['id'],
         columnNames: ['catalogoId'],
@@ -18,7 +19,7 @@ export class AddForeignKeyCatalogoPaginasDeleteCascade1702671669105
     await queryRunner.createForeignKey(
       'catalogo_pagina_mapeamento',
       new TableForeignKey({
-        name: 'FK_CATALOGO_PAGINA_MAPEAMENTO',
+        name: 'FK_' + randomUUID().replaceAll('-', ''),
         referencedTableName: 'catalogo_pagina',
         referencedColumnNames: ['id'],
         columnNames: ['catalogoPaginaId'],
@@ -30,14 +31,14 @@ export class AddForeignKeyCatalogoPaginasDeleteCascade1702671669105
       'catalogo_pagina_mapeamento_produtos_produto',
       [
         new TableForeignKey({
-          name: 'FK_CATALOGO_PAGINA_MAPEAMENTO_PRODUTO',
+          name: 'FK_' + randomUUID().replaceAll('-', ''),
           referencedTableName: 'catalogo_pagina_mapeamento',
           referencedColumnNames: ['id'],
           columnNames: ['catalogoPaginaMapeamentoId'],
           onDelete: 'CASCADE',
         }),
         new TableForeignKey({
-          name: 'FK_CATALOGO_PAGINA_MAPEAMENTO_PRODUTO_PRODUTO',
+          name: 'FK_' + randomUUID().replaceAll('-', ''),
           referencedTableName: 'produto',
           referencedColumnNames: ['id'],
           columnNames: ['produtoId'],

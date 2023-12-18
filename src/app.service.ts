@@ -19,28 +19,37 @@ export class AppService {
 
   async registeredUser(user_id: string) {
     const id = uuidv5(user_id, this.configService.get('AUDIENCE'));
-    produtoData.forEach((f) => (f['userId'] = id));
-    await this.produtoService.createMany(produtoData);
-    for (const catalogo of catalogoData) {
-      catalogo['identificador'] = v4();
-      for (const pagina of catalogo.paginas) {
-        await this.imageKit.copyFolder({
-          sourceFolderPath: 'catalogo/padrao/*',
-          destinationPath:
-            'catalogo/catalogos/' + catalogo['identificador'] + '/',
-        });
-        for (const mapeamento of pagina.mapeamentos) {
-          for (let produto of mapeamento.produtos) {
-            produto = Object.assign(
-              produto,
-              await this.produtoService.getReferenciaUsuario(
-                produto.referencia,
-                id,
-              ),
-            );
+
+    try {
+      produtoData.forEach((f) => (f['userId'] = id));
+      await this.produtoService.createMany(produtoData);
+    } catch (e) {
+      console.error(e);
+    }
+    try {
+      for (const catalogo of catalogoData) {
+        catalogo['identificador'] = v4();
+        for (const pagina of catalogo.paginas) {
+          await this.imageKit.copyFolder({
+            sourceFolderPath: 'catalogo/padrao/*',
+            destinationPath:
+              'catalogo/catalogos/' + catalogo['identificador'] + '/',
+          });
+          for (const mapeamento of pagina.mapeamentos) {
+            for (let produto of mapeamento.produtos) {
+              produto = Object.assign(
+                produto,
+                await this.produtoService.getReferenciaUsuario(
+                  produto.referencia,
+                  id,
+                ),
+              );
+            }
           }
         }
       }
+    } catch (e) {
+      console.error(e);
     }
     this.catalogoService.createCatalogoUser(catalogoData[0] as any, id);
   }

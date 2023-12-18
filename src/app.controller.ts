@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('registeredUser')
+  @Get('/registeredUser')
   registeredUser(@Query('user_id') user_id: string) {
     this.appService.registeredUser(user_id);
   }
