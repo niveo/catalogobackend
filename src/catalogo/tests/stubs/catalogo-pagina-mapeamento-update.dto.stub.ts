@@ -1,4 +1,4 @@
-import { CatalogoPaginaMapeamentoDto } from '../../dtos';
+import { CatalogoPaginaMapeamentoDto, ProdutoDto } from '../../../dtos';
 
 export const CatalogoPaginaMapeamentoUpdateDtoStub =
   (): CatalogoPaginaMapeamentoDto => {
@@ -9,5 +9,6 @@ export const CatalogoPaginaMapeamentoUpdateDtoStub =
       finalPosicalY: 784.281,
       width: 224.521,
       height: 426.091,
+      produtos: [new ProdutoDto()],
     };
   };

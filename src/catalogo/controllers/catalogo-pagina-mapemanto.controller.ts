@@ -1,16 +1,21 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
   InternalServerErrorException,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
@@ -28,8 +33,12 @@ import {
   CatalogoPaginaMapeamentoDto,
   CreateCatalogoPaginaMapeamentoDto,
   UpdateCatalogoPaginaMapeamentoDto,
-} from '../dtos';
+} from '../../dtos';
+import { AuthorizationGuard } from '../../authorization';
 
+@ApiBearerAuth()
+@UseGuards(AuthorizationGuard)
+@UseInterceptors(ClassSerializerInterceptor)
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiTags('catalogoPaginaMapeamento')
 @Controller('catalogo_pagina_mapeamento')
@@ -42,9 +51,19 @@ export class CatalogoPaginaMapeamentoController {
   @ApiOperation({ summary: 'Carregar registros paginados' })
   @Get()
   getAll(
-    @Query() idCatalogoPagina: number,
+    @Query('idCatalogoPagina', ParseIntPipe) idCatalogoPagina: number,
   ): Promise<CatalogoPaginaMapeamentoDto[]> {
     return this.service.getAll(idCatalogoPagina);
+  }
+
+  @ApiProduces(MediaType.APPLICATION_JSON)
+  @ApiConsumes(MediaType.APPLICATION_JSON)
+  @ApiOperation({ summary: 'Carregar registros dos produtos mapeados' })
+  @Get('lista/:idCatalogoPagina')
+  getMapeamentoProdutoCordenadas(
+    @Param('idCatalogoPagina', ParseIntPipe) idCatalogoPagina: number,
+  ): Promise<CatalogoPaginaMapeamentoDto[]> {
+    return this.service.getMapeamentoProdutoCordenadas(idCatalogoPagina);
   }
 
   @ApiOperation({ summary: 'Carregar registro por id' })
@@ -56,8 +75,33 @@ export class CatalogoPaginaMapeamentoController {
     type: Number,
   })
   @Get(':id')
-  async getId(@Param('id') id: number): Promise<CatalogoPaginaMapeamentoDto> {
+  async getId(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CatalogoPaginaMapeamentoDto> {
     return await this.service.getId(id);
+  }
+
+  @ApiOperation({ summary: 'Remover registro mapeado' })
+  @ApiResponse({ status: 200, description: 'Registro removido com sucesso.' })
+  @ApiConsumes(MediaType.TEXT_PLAIN)
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+  })
+  @Delete('deleteMapeado')
+  async deleteProdutoCordenada(
+    @Query('id', ParseIntPipe) id: number,
+    @Query('produto', ParseIntPipe) produto: number,
+  ) {
+    try {
+      return await this.service.deleteProdutoCordenada(id, produto);
+    } catch (e) {
+      console.error(e);
+      if (e instanceof RegistroNaoLocalizadoError)
+        throw new NotFoundException(e.message);
+      else throw new InternalServerErrorException();
+    }
   }
 
   @ApiOperation({ summary: 'Remover registro por id' })
@@ -69,7 +113,7 @@ export class CatalogoPaginaMapeamentoController {
     type: Number,
   })
   @Delete(':id')
-  async deleteId(@Param('id') id: number) {
+  async deleteId(@Param('id', ParseIntPipe) id: number) {
     try {
       return await this.service.deleteId(id);
     } catch (e) {
@@ -95,7 +139,7 @@ export class CatalogoPaginaMapeamentoController {
   })
   @ApiProduces(MediaType.APPLICATION_JSON)
   update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateCatalogoDto: UpdateCatalogoPaginaMapeamentoDto,
   ): Promise<number> {
     return this.service.update(id, updateCatalogoDto);

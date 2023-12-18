@@ -1,15 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
-import { carregarSwaggerModule } from './catalogo/catalogo-swagger.document';
+import { carregarCatalogoSwaggerModule } from './catalogo/catalogo-swagger.document';
 //import * as nocache from 'nocache';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './common';
+import { carregarProdutoSwaggerModule } from './produto/produto-swagger.document';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  carregarSwaggerModule(app);
+  carregarCatalogoSwaggerModule(app);
+  carregarProdutoSwaggerModule(app);
 
   //app.setGlobalPrefix('api');
 
@@ -20,13 +22,13 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   app.enableCors({
-    origin: 'http://localhost:4200',
-    methods: ['GET', 'PUT', 'POST', 'DELETE'],
+    origin: '*',
+    methods: ['*'],
     allowedHeaders: ['Authorization', 'Content-Type'],
     maxAge: 86400,
   });
 
-  app.use(
+  /*app.use(
     helmet({
       hsts: { maxAge: 31536000 },
       frameguard: { action: 'deny' },
@@ -37,7 +39,7 @@ async function bootstrap() {
         },
       },
     }),
-  );
+  );*/
 
   await app.listen(7000);
 }

@@ -1,16 +1,21 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
   InternalServerErrorException,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
@@ -27,9 +32,13 @@ import {
   CatalogoPaginaDto,
   CreateCatalogoPaginaDto,
   UpdateCatalogoPaginaDto,
-} from '../dtos';
+} from '../../dtos';
 import { CatalogoPaginaService } from './../services/catalogo-pagina.service';
+import { AuthorizationGuard } from '../../authorization';
 
+@ApiBearerAuth()
+@UseGuards(AuthorizationGuard)
+@UseInterceptors(ClassSerializerInterceptor)
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
 @ApiTags('catalogoPagina')
 @Controller('catalogo_pagina')
@@ -41,7 +50,9 @@ export class CatalogoPaginaController {
   @ApiConsumes(MediaType.APPLICATION_JSON)
   @ApiOperation({ summary: 'Carregar registros' })
   @Get()
-  getAll(@Query() idCatalogo: number): Promise<CatalogoPaginaDto[]> {
+  getAll(
+    @Query('idCatalogo', ParseIntPipe) idCatalogo: number,
+  ): Promise<CatalogoPaginaDto[]> {
     return this.service.getAll(idCatalogo);
   }
 
@@ -54,8 +65,25 @@ export class CatalogoPaginaController {
     type: Number,
   })
   @Get(':id')
-  async getId(@Param('id') id: number): Promise<CatalogoPaginaDto> {
+  async getId(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CatalogoPaginaDto> {
     return await this.service.getId(id);
+  }
+
+  @ApiOperation({ summary: 'Carregar registro por id com mapeamentos em lazy' })
+  @ApiProduces(MediaType.APPLICATION_JSON)
+  @ApiConsumes(MediaType.TEXT_PLAIN)
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+  })
+  @Get('lazy/:id')
+  async getPaginaLazy(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CatalogoPaginaDto> {
+    return await this.service.getPaginaLazy(id);
   }
 
   @ApiOperation({ summary: 'Remover registro por id' })
@@ -67,7 +95,7 @@ export class CatalogoPaginaController {
     type: Number,
   })
   @Delete(':id')
-  async deleteId(@Param('id') id: number) {
+  async deleteId(@Param('id', ParseIntPipe) id: number) {
     try {
       return await this.service.deleteId(id);
     } catch (e) {
@@ -93,7 +121,7 @@ export class CatalogoPaginaController {
   })
   @ApiProduces(MediaType.APPLICATION_JSON)
   update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateCatalogoDto: UpdateCatalogoPaginaDto,
   ): Promise<number> {
     return this.service.update(id, updateCatalogoDto);

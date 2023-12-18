@@ -1,7 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CatalogoPaginaMapeamentoDto } from './catalogo-pagina-mapeamento.dto';
 import { CatalogoDto } from './catalogo.dto';
-import { IsNotEmpty, IsNotEmptyObject, IsNumber } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNotEmptyObject,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
 export class CatalogoPaginaDto {
   @ApiProperty({
@@ -18,6 +23,30 @@ export class CatalogoPaginaDto {
   })
   pagina: number;
 
+  @IsNumber()
+  @ApiProperty({
+    type: Number,
+  })
+  size?: number;
+
+  @IsNumber()
+  @ApiProperty({
+    type: Number,
+  })
+  height?: number;
+
+  @IsNumber()
+  @ApiProperty({
+    type: Number,
+  })
+  width?: number;
+
+  @IsString()
+  @ApiProperty({
+    type: String,
+  })
+  name?: string;
+
   @IsNotEmptyObject()
   @ApiProperty({
     required: true,
@@ -31,4 +60,12 @@ export class CatalogoPaginaDto {
     isArray: true,
   })
   mapeamentos?: CatalogoPaginaMapeamentoDto[];
+
+  @IsNumber()
+  @ApiProperty({
+    type: Number,
+    readOnly: true,
+    default: 0,
+  })
+  mapeados?: number = 0;
 }

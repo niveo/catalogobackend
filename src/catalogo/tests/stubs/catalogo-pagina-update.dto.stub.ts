@@ -1,4 +1,4 @@
-import { CatalogoPaginaDto } from '../../dtos';
+import { CatalogoPaginaDto } from '../../../dtos';
 
 export const CatalogoPaginaUpdateDtoStub = (): CatalogoPaginaDto => {
   return {

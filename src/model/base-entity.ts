@@ -10,21 +10,21 @@ export abstract class BaseEntity {
   @PrimaryGeneratedColumn('increment', {
     type: 'int',
   })
-  id: number;
+  id?: number;
 
   @Exclude()
   @CreateDateColumn()
-  cadastrado: Date;
+  cadastrado?: Date;
 
   @Exclude()
   @UpdateDateColumn()
-  atualizado: Date;
+  atualizado?: Date;
 
   @Exclude()
   @DeleteDateColumn()
-  removido: Date;
+  removido?: Date;
 
   @Exclude()
   @VersionColumn()
-  versao: number;
+  versao?: number;
 }

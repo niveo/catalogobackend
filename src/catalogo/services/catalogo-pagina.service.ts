@@ -5,8 +5,8 @@ import {
   CatalogoPaginaDto,
   CreateCatalogoPaginaDto,
   UpdateCatalogoPaginaDto,
-} from '../dtos';
-import { CatalogoPagina } from '../entities/catalogo-pagina.entity';
+} from '../../dtos';
+import { CatalogoPagina } from '../../entities/catalogo-pagina.entity';
 
 @Injectable()
 export class CatalogoPaginaService {
@@ -43,6 +43,13 @@ export class CatalogoPaginaService {
         id: id,
       })
     ).affected;
+  }
+
+  getPaginaLazy(id: number): Promise<CatalogoPaginaDto> {
+    const qb = this.catalogoRepository.createQueryBuilder('pagina');
+    qb.leftJoinAndSelect('pagina.mapeamentos', 'mapeamentos');
+    qb.where('pagina.id = :id', { id: id });
+    return qb.getOneOrFail();
   }
 
   async update(

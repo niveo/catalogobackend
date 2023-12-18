@@ -6,6 +6,8 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  InternalServerErrorException,
+  NotFoundException,
   Param,
   ParseBoolPipe,
   ParseIntPipe,
@@ -18,7 +20,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -32,70 +34,51 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Observable } from 'rxjs';
+import { EntityNotFoundError } from 'typeorm';
 import { AuthorizationGuard } from '../../authorization';
 import { MediaType } from '../../common';
-import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../../dtos';
-import { CatalogoService } from '../services/catalogo.service';
+import { ProdutoService } from '../produto.service';
+import { CreateProdutoDto, ProdutoDto, UpdateProdutoDto } from '../../dtos';
 
 @ApiBearerAuth()
 @UseGuards(AuthorizationGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiUnauthorizedResponse({ description: 'Requisição não autenticada' })
-@ApiTags('catalogo')
-@Controller('catalogo')
-@ApiExtraModels(CatalogoDto)
-export class CatalogoController {
-  constructor(private readonly service: CatalogoService) {}
+@ApiTags('produto')
+@Controller('produto')
+@ApiExtraModels(ProdutoDto)
+export class ProdutoController {
+  constructor(private readonly service: ProdutoService) {}
 
   @ApiOperation({ summary: 'Incluir novo registro' })
   @ApiCreatedResponse({
     description: 'Registro incluido com sucesso',
-    type: CatalogoDto,
+    type: ProdutoDto,
   })
   @ApiProduces(MediaType.APPLICATION_JSON)
   @ApiConsumes(MediaType.APPLICATION_JSON)
   @ApiBody({
-    type: CreateCatalogoDto,
+    type: CreateProdutoDto,
     required: true,
-    description: 'Corpo do catalogo para inclusão',
+    description: 'Corpo do produto para inclusão',
   })
   @UsePipes(ValidationPipe)
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  create(@Body() catalogoCreateDto: CreateCatalogoDto): Promise<CatalogoDto> {
-    return this.service.create(catalogoCreateDto);
+  create(@Body() createProdutoDto: CreateProdutoDto): Promise<ProdutoDto> {
+    return this.service.create(createProdutoDto);
   }
 
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Importar arquivos para um novo catalogo' })
+  @ApiOperation({ summary: 'Importar uma lista de produtos em csv' })
   @Post('importar')
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'files' },
-      { name: 'logo' },
-      { name: 'avatar' },
-    ]),
-  )
-  importarCatalogo(
-    @UploadedFiles()
-    files: {
-      files: Express.Multer.File[];
-      logo: Express.Multer.File[];
-      avatar: Express.Multer.File[];
-    },
-    @Query('titulo') titulo: string,
-    @Query('descricao') descricao: string,
-    @Query('ativo', ParseBoolPipe) ativo: boolean,
+  @UseInterceptors(FilesInterceptor('files'))
+  importarProdutos(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Query('comCabecalho', ParseBoolPipe) comCabecalho: boolean,
+    @Query('separador') separador: string,
   ) {
-    return this.service.importarCatalogo(
-      titulo,
-      descricao,
-      ativo,
-      files.files,
-      files.logo,
-      files.avatar,
-    );
+    return this.service.importarProdutos(files, comCabecalho, separador);
   }
 
   @ApiProduces(MediaType.APPLICATION_JSON)
@@ -104,7 +87,7 @@ export class CatalogoController {
   @UsePipes(ValidationPipe)
   @HttpCode(HttpStatus.OK)
   @Get()
-  getAll(): Observable<CatalogoDto[]> {
+  async getAll(): Promise<ProdutoDto[]> {
     return this.service.getAll();
   }
 
@@ -119,11 +102,11 @@ export class CatalogoController {
   @UsePipes(ValidationPipe)
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async getId(@Param('id', ParseIntPipe) id: number): Promise<CatalogoDto> {
+  async getId(@Param('id', ParseIntPipe) id: number): Promise<ProdutoDto> {
     return this.service.getId(id);
   }
 
-  @ApiOperation({ summary: 'Carregar registro por id com paginas em lazy' })
+  @ApiOperation({ summary: 'Carregar registro por referencia' })
   @ApiProduces(MediaType.APPLICATION_JSON)
   @ApiConsumes(MediaType.TEXT_PLAIN)
   @ApiParam({
@@ -133,19 +116,27 @@ export class CatalogoController {
   })
   @UsePipes(ValidationPipe)
   @HttpCode(HttpStatus.OK)
-  @Get('lazy/:id')
-  async getCatalogoLazy(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<CatalogoDto> {
-    return this.service.getCatalogoLazy(id);
+  @Get('referencia/:referencia')
+  async getReferencia(
+    @Param('referencia') referencia: string,
+  ): Promise<ProdutoDto> {
+    try {
+      return await this.service.getReferencia(referencia);
+    } catch (e) {
+      if (e instanceof EntityNotFoundError) {
+        throw new NotFoundException();
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   @ApiOperation({ summary: 'Atualizar registro por id' })
   @ApiResponse({ status: 200, description: 'Registro atualizado com sucesso.' })
   @ApiBody({
-    type: UpdateCatalogoDto,
+    type: UpdateProdutoDto,
     required: true,
-    description: 'Atualzação de um catalogo pelo ID',
+    description: 'Atualzação de um produto pelo ID',
   })
   @ApiParam({
     name: 'id',
@@ -158,9 +149,9 @@ export class CatalogoController {
   @Put(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateCatalogoDto: UpdateCatalogoDto,
+    @Body() updateProdutoDto: UpdateProdutoDto,
   ): Promise<number> {
-    return this.service.update(id, updateCatalogoDto);
+    return this.service.update(id, updateProdutoDto);
   }
 
   @ApiOperation({ summary: 'Remover registro por id' })
@@ -174,7 +165,7 @@ export class CatalogoController {
   @UsePipes(ValidationPipe)
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
-  deleteId(@Param('id', ParseIntPipe) id: number): Observable<number> {
-    return this.service.deleteId(id);
+  async deleteId(@Param('id', ParseIntPipe) id: number): Promise<number> {
+    return await this.service.deleteId(id);
   }
 }

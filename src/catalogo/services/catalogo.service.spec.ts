@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Catalogo } from '../entities';
 import { CatalogoUpdateDtoStub } from '../tests/stubs/catalogo-update.dto.stub';
 import { CatalogoCreateDtoStub } from '../tests/stubs/catalogo-create.dto.stub';
 import { CatalogoService } from './catalogo.service';
 import { CommonModule } from '../../common.module';
 import { DataSource, EntityNotFoundError } from 'typeorm';
+import { Catalogo } from '../../entities';
 
 describe('CatalogoService', () => {
   let catalogoService: CatalogoService;

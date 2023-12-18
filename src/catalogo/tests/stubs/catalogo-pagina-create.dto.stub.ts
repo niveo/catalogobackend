@@ -1,4 +1,4 @@
-import { CatalogoPaginaDto } from '../../dtos';
+import { CatalogoPaginaDto, ProdutoDto } from '../../../dtos';
 
 export const CatalogoPaginaCreateDtoStub = (
   catalogo: any,
@@ -14,6 +14,7 @@ export const CatalogoPaginaCreateDtoStub = (
         finalPosicalY: 784.281,
         width: 224.521,
         height: 426.091,
+        produtos:[ new ProdutoDto()],
       },
       {
         inicialPosicalX: 567.244,
@@ -22,6 +23,7 @@ export const CatalogoPaginaCreateDtoStub = (
         finalPosicalY: 783.283,
         width: 212.547,
         height: 410.126,
+        produtos: [new ProdutoDto()],
       },
     ],
   };

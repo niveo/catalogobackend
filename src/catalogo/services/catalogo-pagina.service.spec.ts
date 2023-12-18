@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Catalogo, CatalogoPagina } from '../entities';
-import { CommonModule } from '../../common.module';
+import { Catalogo, CatalogoPagina } from '../../entities';
 import { DataSource, EntityNotFoundError } from 'typeorm';
-import { CatalogoPaginaService } from './catalogo-pagina.service';
+import { CommonModule } from '../../common.module';
+import { CatalogoDto } from '../../dtos';
 import { CatalogoPaginaCreateDtoStub } from '../tests/stubs/catalogo-pagina-create.dto.stub';
-import { CatalogoService } from './catalogo.service';
 import { CatalogoPaginaUpdateDtoStub } from '../tests/stubs/catalogo-pagina-update.dto.stub';
-import { CatalogoDto } from '../dtos';
+import { CatalogoPaginaService } from './catalogo-pagina.service';
+import { CatalogoService } from './catalogo.service';
 
 describe('CatalogoPaginaService', () => {
   let catalogoPaginaService: CatalogoPaginaService;

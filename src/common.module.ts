@@ -1,11 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {
-  Catalogo,
-  CatalogoPagina,
-  CatalogoPaginaMapeamento,
-} from './catalogo/entities';
+import { Catalogo, CatalogoPagina, CatalogoPaginaMapeamento } from './entities';
+import { Produto } from './entities/produto.entity';
 import { envVercel } from './environments/environment';
 
 @Module({
@@ -13,7 +10,6 @@ import { envVercel } from './environments/environment';
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => {
-        console.log('PGHOST: ', config.get('PGHOST'));
         return {
           type: 'postgres',
           host: config.get('PGHOST'),
@@ -22,9 +18,14 @@ import { envVercel } from './environments/environment';
           url: config.get('DATABASE_URL'),
           password: config.get('PGPASSWORD'),
           database: config.get('PGDATABASE'),
-          entities: [Catalogo, CatalogoPagina, CatalogoPaginaMapeamento],
+          entities: [
+            Produto,
+            Catalogo,
+            CatalogoPagina,
+            CatalogoPaginaMapeamento,
+          ],
           //Setting synchronize: true shouldn't be used in production - otherwise you can lose production data.
-          synchronize: !envVercel,
+          synchronize: false,
           ssl: envVercel,
           logging: false,
         };

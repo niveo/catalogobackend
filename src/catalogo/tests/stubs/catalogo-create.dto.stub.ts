@@ -1,4 +1,4 @@
-import { CatalogoDto } from '../../dtos';
+import { CatalogoDto, ProdutoDto } from '../../../dtos';
 
 export const CatalogoCreateDtoStub = (): CatalogoDto => {
   return {
@@ -15,6 +15,7 @@ export const CatalogoCreateDtoStub = (): CatalogoDto => {
             finalPosicalY: 784.281,
             width: 224.521,
             height: 426.091,
+            produtos: [new ProdutoDto()],
           },
           {
             inicialPosicalX: 567.244,
@@ -23,6 +24,7 @@ export const CatalogoCreateDtoStub = (): CatalogoDto => {
             finalPosicalY: 783.283,
             width: 212.547,
             height: 410.126,
+            produtos: [new ProdutoDto()],
           },
         ],
       },
@@ -36,6 +38,7 @@ export const CatalogoCreateDtoStub = (): CatalogoDto => {
             finalPosicalY: 783.283,
             width: 258.449,
             height: 409.128,
+            produtos: [new ProdutoDto()],
           },
           {
             inicialPosicalX: 250.918,
@@ -44,6 +47,7 @@ export const CatalogoCreateDtoStub = (): CatalogoDto => {
             finalPosicalY: 1223.34,
             width: 229.511,
             height: 404.138,
+            produtos: [new ProdutoDto()],
           },
         ],
       },
@@ -57,6 +61,7 @@ export const CatalogoCreateDtoStub = (): CatalogoDto => {
             finalPosicalY: 1222.35,
             width: 238.491,
             height: 415.115,
+            produtos: [new ProdutoDto()],
           },
           {
             inicialPosicalX: 242.935,
@@ -65,6 +70,7 @@ export const CatalogoCreateDtoStub = (): CatalogoDto => {
             finalPosicalY: 1675.38,
             width: 230.509,
             height: 425.094,
+            produtos: [new ProdutoDto()],
           },
         ],
       },
