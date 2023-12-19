@@ -28,7 +28,7 @@ async function bootstrap() {
     maxAge: 86400,
   });
 
-  /*app.use(
+  app.use(
     helmet({
       hsts: { maxAge: 31536000 },
       frameguard: { action: 'deny' },
@@ -39,7 +39,7 @@ async function bootstrap() {
         },
       },
     }),
-  );*/
+  );
 
   await app.listen(7000);
 }
