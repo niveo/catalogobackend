@@ -1,50 +1,64 @@
-import { randomUUID } from 'crypto';
 import { MigrationInterface, QueryRunner, TableForeignKey } from 'typeorm';
+import { v4 } from 'uuid';
 
 export class AddForeignKeyCatalogoPaginasDeleteCascade1702671669105
   implements MigrationInterface
 {
+  private async criarFk(
+    queryRunner: QueryRunner,
+    tabela: string,
+    tabelaReferencia: string,
+    camposReferencia: string[],
+    campos: string[],
+    onDelete: 'CASCADE' | 'RESTRICT' = 'CASCADE',
+  ) {
+    const tabelaExiste = await queryRunner.getTable(tabela);
+    if (tabelaExiste) {
+      await queryRunner.createForeignKey(
+        tabela,
+        new TableForeignKey({
+          name: 'FK_' + v4().replaceAll('-', ''),
+          referencedTableName: tabelaReferencia,
+          referencedColumnNames: camposReferencia,
+          columnNames: campos,
+          onDelete: onDelete,
+        }),
+      );
+    }
+  }
+
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.createForeignKey(
+    await this.criarFk(
+      queryRunner,
       'catalogo_pagina',
-      new TableForeignKey({
-        name: 'FK_' + randomUUID().replaceAll('-', ''),
-        referencedTableName: 'catalogo',
-        referencedColumnNames: ['id'],
-        columnNames: ['catalogoId'],
-        onDelete: 'CASCADE',
-      }),
+      'catalogo',
+      ['id'],
+      ['catalogoId'],
     );
 
-    await queryRunner.createForeignKey(
+    await this.criarFk(
+      queryRunner,
       'catalogo_pagina_mapeamento',
-      new TableForeignKey({
-        name: 'FK_' + randomUUID().replaceAll('-', ''),
-        referencedTableName: 'catalogo_pagina',
-        referencedColumnNames: ['id'],
-        columnNames: ['catalogoPaginaId'],
-        onDelete: 'CASCADE',
-      }),
+      'catalogo_pagina',
+      ['id'],
+      ['catalogoPaginaId'],
     );
 
-    await queryRunner.createForeignKeys(
+    await this.criarFk(
+      queryRunner,
       'catalogo_pagina_mapeamento_produtos_produto',
-      [
-        new TableForeignKey({
-          name: 'FK_' + randomUUID().replaceAll('-', ''),
-          referencedTableName: 'catalogo_pagina_mapeamento',
-          referencedColumnNames: ['id'],
-          columnNames: ['catalogoPaginaMapeamentoId'],
-          onDelete: 'CASCADE',
-        }),
-        new TableForeignKey({
-          name: 'FK_' + randomUUID().replaceAll('-', ''),
-          referencedTableName: 'produto',
-          referencedColumnNames: ['id'],
-          columnNames: ['produtoId'],
-          onDelete: 'RESTRICT',
-        }),
-      ],
+      'catalogo_pagina_mapeamento',
+      ['id'],
+      ['catalogoPaginaMapeamentoId'],
+    );
+
+    await this.criarFk(
+      queryRunner,
+      'catalogo_pagina_mapeamento_produtos_produto',
+      'produto',
+      ['id'],
+      ['produtoId'],
+      'RESTRICT',
     );
   }
 
