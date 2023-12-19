@@ -1,5 +1,5 @@
 import { Column, Entity, Index, Unique, VirtualColumn } from 'typeorm';
-import { BaseEntity } from './../model/base-entity';
+import { BaseEntity } from './base-entity';
 import { Exclude } from 'class-transformer';
 
 @Unique('UNQ_REFERENCIA_USUARIO', ['referencia', 'userId'])
