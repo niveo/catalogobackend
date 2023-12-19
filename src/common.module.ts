@@ -62,6 +62,6 @@ import { envTest, envVercel } from './environments/environment';
       inject: [ConfigService],
     }),
   ],
-  exports: [ConfigModule, TypeOrmModule],
+  exports: [ConfigModule, TypeOrmModule, ClsModule],
 })
 export class CommonModule {}
