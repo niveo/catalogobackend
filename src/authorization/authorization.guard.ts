@@ -11,11 +11,16 @@ import {
   InvalidTokenError,
   UnauthorizedError,
 } from 'express-oauth2-jwt-bearer';
+import { envTest } from '../environments/environment';
 import { promisify } from 'util';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    if (envTest) {
+      return true;
+    }
+
     const request = context.switchToHttp().getRequest<Request>();
     const response = context.switchToHttp().getResponse<Response>();
 

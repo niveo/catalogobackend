@@ -8,3 +8,5 @@ export const CDN_SWAGGER = {
     'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.10.3/swagger-ui-bundle.min.js',
   ],
 };
+
+export const USER_ID_TEST = { userId: '1' };

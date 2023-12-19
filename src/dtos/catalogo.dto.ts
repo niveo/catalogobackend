@@ -19,6 +19,29 @@ export class CatalogoDto {
   })
   descricao: string;
 
+  @IsDefined()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    required: true,
+    type: String,
+  })
+  titulo: string;
+
+  @IsString()
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  logo: string;
+
+  @IsString()
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  avatar: string;
+
   @IsBoolean()
   @IsNotEmpty()
   @ApiProperty({
@@ -48,16 +71,20 @@ export class CatalogoDto {
 
   @Exclude()
   @ApiHideProperty()
-  userId?: string;
+  userId: string;
 
   @Exclude()
   @ApiHideProperty()
   identificador?: string;
+
+  @Exclude()
+  @ApiHideProperty()
+  sistema: boolean = false;
 
   @ApiProperty({
     required: false,
     type: CatalogoPaginaDto,
     isArray: true,
   })
-  paginas?: CatalogoPaginaDto[];
+  paginas: CatalogoPaginaDto[];
 }

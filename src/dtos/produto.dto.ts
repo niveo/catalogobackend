@@ -62,7 +62,7 @@ export class ProdutoDto {
 
   @Exclude()
   @ApiHideProperty()
-  userId?: string;
+  userId: string;
 
   @IsNumber()
   @ApiProperty({
@@ -71,4 +71,8 @@ export class ProdutoDto {
     default: 0,
   })
   mapeados?: number = 0;
+
+  @Exclude()
+  @ApiHideProperty()
+  sistema: boolean = false;
 }

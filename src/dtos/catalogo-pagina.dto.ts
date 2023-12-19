@@ -27,25 +27,25 @@ export class CatalogoPaginaDto {
   @ApiProperty({
     type: Number,
   })
-  size?: number;
+  size: number;
 
   @IsNumber()
   @ApiProperty({
     type: Number,
   })
-  height?: number;
+  height: number;
 
   @IsNumber()
   @ApiProperty({
     type: Number,
   })
-  width?: number;
+  width: number;
 
   @IsString()
   @ApiProperty({
     type: String,
   })
-  name?: string;
+  name: string;
 
   @IsNotEmptyObject()
   @ApiProperty({

@@ -1,7 +1,7 @@
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
 import { ProdutoModule } from './produto.module';
-import { CDN_SWAGGER } from '../common/constants/cosntant';
+import { CDN_SWAGGER } from '../common/constants/constant';
 
 export const carregarProdutoSwaggerModule = (app: INestApplication) => {
   const config = new DocumentBuilder()

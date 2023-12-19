@@ -7,6 +7,7 @@ import { v5 as uuidv5 } from 'uuid';
 import { Catalogo, CatalogoPagina, CatalogoPaginaMapeamento } from './entities';
 import { Produto } from './entities/produto.entity';
 import { envTest, envVercel } from './environments/environment';
+import { USER_ID_TEST } from './common/constants/constant';
 
 @Module({
   imports: [
@@ -19,7 +20,9 @@ import { envTest, envVercel } from './environments/environment';
             // ClsMiddleware for all routes
             mount: true,
             setup: (cls, req) => {
-              if (req.headers['authorization']) {
+              if (envTest) {
+                cls.set('userId', USER_ID_TEST.userId);
+              } else if (req.headers['authorization']) {
                 cls.set(
                   'userId',
                   uuidv5(
