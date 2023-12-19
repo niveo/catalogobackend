@@ -1,6 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { ClsModule } from 'nestjs-cls';
+import path from 'path';
 import request from 'supertest';
 import { DataSource } from 'typeorm';
 import produtoDataJson from '../../data/produtos.json';
@@ -52,10 +53,9 @@ describe('Produto', () => {
 
   describe('PUT', () => {
     it('deve retornar o produto atualizado', async () => {
-      const stub = produtoData;
       const { text } = await request(app.getHttpServer())
         .put('/produto/' + produtoCriado.id)
-        .send(stub)
+        .send(produtoCriado)
         .set('Accept', 'application/json')
         .expect('Content-Type', 'text/html; charset=utf-8')
         .expect(200);
@@ -74,7 +74,6 @@ describe('Produto', () => {
     });
 
     it('deve retornar um produto', async () => {
-      const stub = produtoData;
       const { body } = await request(app.getHttpServer())
         .get('/produto/' + produtoCriado.id)
         .set('Accept', 'application/json')
@@ -82,12 +81,38 @@ describe('Produto', () => {
         .expect(200);
 
       expect(body).toEqual({
-        ativo: stub.ativo,
+        ativo: produtoCriado.ativo,
         id: produtoCriado.id,
-        descricao: stub.descricao,
-        referencia: stub.referencia,
+        descricao: produtoCriado.descricao,
+        referencia: produtoCriado.referencia,
         mapeados: null,
       });
+    });
+
+    it('deve retornar um produto pela referencia', async () => {
+      const { body } = await request(app.getHttpServer())
+        .get('/produto/referencia/' + produtoCriado.referencia)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      expect(body).toEqual({
+        ativo: produtoCriado.ativo,
+        id: produtoCriado.id,
+        descricao: produtoCriado.descricao,
+        referencia: produtoCriado.referencia,
+        mapeados: null,
+      });
+    });
+
+    it('deve retornar produto não localizado', async () => {
+      const { body } = await request(app.getHttpServer())
+        .get('/produto/referencia/' + '0')
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(404);
+
+      expect(body.message).toEqual('Not Found');
     });
   });
 
@@ -98,6 +123,20 @@ describe('Produto', () => {
         .expect('Content-Type', 'text/html; charset=utf-8')
         .expect(200);
       expect(text).toEqual('1');
+    });
+  });
+
+  describe('IMPORTAR', () => {
+    it('deve retornar a quantidade de registros do csv', async () => {
+      const { body } = await request(app.getHttpServer())
+        .post('/produto/importar')
+        .query({ comCabecalho: 'true' })
+        .query({ separador: ';' })
+        .attach('files', path.resolve(__dirname, '../../data/produtos.csv'))
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200);
+      expect(body).toHaveLength(184);
     });
   });
 });

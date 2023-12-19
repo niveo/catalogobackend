@@ -1,27 +1,36 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { randomUUID } from 'crypto';
+import ImageKit from 'imagekit';
 import { ClsModule } from 'nestjs-cls';
+import path from 'path';
 import { Catalogo } from 'src/entities';
 import request from 'supertest';
 import { DataSource } from 'typeorm';
 import catalogoDataJson from '../../../data/catalogo.json';
 import { CommonModule } from '../../common.module';
+import { imageKitProvider } from '../../providers/imagekit.provider';
 import { CatalogoModule } from '../catalogo.module';
+
+jest.useRealTimers();
 
 describe('Catalogo', () => {
   let app: INestApplication;
   let dataSource: DataSource;
   let catalogoData: Catalogo;
   let catalogoCriado: Catalogo;
+  let imageKit: ImageKit;
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
       imports: [CommonModule, ClsModule.forFeature(), CatalogoModule],
+      providers: [...imageKitProvider],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     dataSource = app.get<DataSource>(DataSource);
+
+    imageKit = app.get<ImageKit>(ImageKit.name);
 
     delete catalogoDataJson[0].paginas;
     catalogoData = catalogoDataJson[0] as Catalogo;
@@ -33,6 +42,10 @@ describe('Catalogo', () => {
     await dataSource.dropDatabase();
     await dataSource.destroy();
     await app.close();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('should be defined', () => {});
@@ -102,6 +115,55 @@ describe('Catalogo', () => {
         .expect('Content-Type', 'text/html; charset=utf-8')
         .expect(200);
       expect(text).toEqual('1');
+    });
+  });
+
+  describe('IMPORTAR', () => {
+    //Aumentar o tempo limite da chamado do teste
+    jest.setTimeout(10 * 1000);
+    it('deve retornar o catalogo importado', async () => {
+      const { body } = await request(app.getHttpServer())
+        .post('/catalogo/importar')
+        .query({ titulo: 'TESTE' })
+        .query({ descricao: 'TESTE' })
+        .query({ ativo: 'true' })
+        .attach(
+          'files',
+          path.resolve(__dirname, '../../../data/catalogo/00001.jpg'),
+        )
+        .attach(
+          'files',
+          path.resolve(__dirname, '../../../data/catalogo/00002.jpg'),
+        )
+        .attach(
+          'files',
+          path.resolve(__dirname, '../../../data/catalogo/00003.jpg'),
+        )
+        .attach(
+          'files',
+          path.resolve(__dirname, '../../../data/catalogo/00004.jpg'),
+        )
+        .attach(
+          'files',
+          path.resolve(__dirname, '../../../data/catalogo/00005.jpg'),
+        )
+        .attach(
+          'logo',
+          path.resolve(
+            __dirname,
+            '../../../data/catalogo/bellesabeautycare_cover.jpeg',
+          ),
+        )
+        .attach(
+          'avatar',
+          path.resolve(__dirname, '../../../data/catalogo/1661796749538.jpeg'),
+        )
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200);
+      expect(body).not.toBeNull();
+
+      imageKit.deleteFolder(`catalogo/catalogos/${body.identificador}/`);
     });
   });
 });

@@ -63,11 +63,19 @@ describe('ProdutoService', () => {
   });
 
   describe('Ler Produtos', () => {
-    it('Deve retornar um registro"', async () => {
+    it('Deve retornar um registro', async () => {
       const registros = await cls.runWith(USER_ID_TEST, () =>
         produtoService.getAll(),
       );
       expect(registros).not.toBeNull();
+    });
+
+    it('Deve retornar um registro pela referencia', async () => {
+      const registros = await cls.runWith(USER_ID_TEST, () =>
+        produtoService.getReferencia(produtoDataCriado.referencia),
+      );
+      expect(registros).not.toBeNull();
+      expect(registros.referencia).toEqual(produtoDataCriado.referencia);
     });
   });
 

@@ -62,6 +62,13 @@ describe('produtoController', () => {
       );
       expect(affected).toEqual(1);
     });
+    it('Deve retornar um registro pela referencia', async () => {
+      const registros = await cls.runWith(USER_ID_TEST, () =>
+        produtoController.getReferencia(produtoDataCriado.referencia),
+      );
+      expect(registros).not.toBeNull();
+      expect(registros.referencia).toEqual(produtoDataCriado.referencia);
+    });
   });
 
   describe('Ler Produtos', () => {

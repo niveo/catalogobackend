@@ -50,6 +50,7 @@ export class CatalogoService {
     });
   }
 
+  //Usuado para remover todos os dados do sistema para um novo importe
   removerSistema() {
     const userId = this.cls.get('userId');
     return this.catalogoRepository.delete({
@@ -147,6 +148,6 @@ export class CatalogoService {
       },
     );
 
-    return catalogo.id;
+    return catalogo;
   }
 }

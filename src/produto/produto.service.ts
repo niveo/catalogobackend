@@ -24,15 +24,6 @@ export class ProdutoService {
     });
   }
 
-  async produtosPorIds(produtos: number[]): Promise<ProdutoDto[]> {
-    return await this.produtoRepository
-      .createQueryBuilder('produto')
-      .where('produto.id IN (:...ids)"', {
-        ids: produtos,
-      })
-      .getMany();
-  }
-
   create(createProdutoDto: CreateProdutoDto): Promise<ProdutoDto> {
     const userId = this.cls.get('userId');
     createProdutoDto.userId = userId;
@@ -43,6 +34,7 @@ export class ProdutoService {
     return this.produtoRepository.save(createProdutoDto);
   }
 
+  //Usuado para remover todos os dados do sistema para um novo importe
   removerSistema() {
     const userId = this.cls.get('userId');
     return this.produtoRepository.delete({
@@ -112,12 +104,14 @@ export class ProdutoService {
         }
       })
       .filter((f) => f);
-    await this.produtoRepository
-      .createQueryBuilder()
-      .insert()
-      .into(Produto)
-      .values(mapeados)
-      .orIgnore()
-      .execute();
+    return (
+      await this.produtoRepository
+        .createQueryBuilder()
+        .insert()
+        .into(Produto)
+        .values(mapeados)
+        .orIgnore()
+        .execute()
+    ).identifiers;
   }
 }
