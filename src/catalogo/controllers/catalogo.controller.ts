@@ -32,7 +32,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Observable } from 'rxjs';
 import { AuthorizationGuard } from '../../authorization';
 import { MediaType } from '../../common';
 import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../../dtos';
@@ -104,7 +103,7 @@ export class CatalogoController {
   @UsePipes(ValidationPipe)
   @HttpCode(HttpStatus.OK)
   @Get()
-  getAll(): Observable<CatalogoDto[]> {
+  getAll(): Promise<CatalogoDto[]> {
     return this.service.getAll();
   }
 
@@ -174,7 +173,7 @@ export class CatalogoController {
   @UsePipes(ValidationPipe)
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
-  deleteId(@Param('id', ParseIntPipe) id: number): Observable<number> {
+  deleteId(@Param('id', ParseIntPipe) id: number): Promise<number> {
     return this.service.deleteId(id);
   }
 }
