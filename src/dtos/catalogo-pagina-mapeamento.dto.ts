@@ -70,5 +70,5 @@ export class CatalogoPaginaMapeamentoDto {
     required: true,
     type: () => CatalogoPaginaDto,
   })
-  catalogoPagina?: CatalogoPaginaDto;
+  catalogoPagina: CatalogoPaginaDto;
 }
