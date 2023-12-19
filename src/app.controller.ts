@@ -7,6 +7,6 @@ export class AppController {
 
   @Get('/registeredUser')
   registeredUser(@Query('user_id') user_id: string) {
-    this.appService.registeredUser(user_id);
+    return this.appService.registeredUser(user_id);
   }
 }

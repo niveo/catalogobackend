@@ -1,7 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { Column, Entity, Index, OneToMany } from 'typeorm';
 import { v4 } from 'uuid';
-import { BaseEntity } from './../model/base-entity';
+import { BaseEntity } from './base-entity';
 import { CatalogoPagina } from './catalogo-pagina.entity';
 
 @Entity()

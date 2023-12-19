@@ -2,9 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import ImageKit from 'imagekit';
 import { ClsService } from 'nestjs-cls';
-import { Observable, defer, from, map } from 'rxjs';
-import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../../dtos';
+import { defer, firstValueFrom, from, map } from 'rxjs';
 import { Repository } from 'typeorm';
+import { CatalogoDto, CreateCatalogoDto, UpdateCatalogoDto } from '../../dtos';
 import { Catalogo } from '../../entities/catalogo.entity';
 
 @Injectable()
@@ -18,18 +18,14 @@ export class CatalogoService {
     private readonly cls: ClsService,
   ) {}
 
-  getAll(): Observable<CatalogoDto[]> {
+  getAll(): Promise<CatalogoDto[]> {
     const userId = this.cls.get('userId');
-    return defer(() =>
-      from(
-        this.catalogoRepository.find({
-          where: {
-            userId: userId,
-            ativo: true,
-          },
-        }),
-      ),
-    );
+    return this.catalogoRepository.find({
+      where: {
+        userId: userId,
+        ativo: true,
+      },
+    });
   }
 
   create(catalogoCreateDto: CreateCatalogoDto): Promise<CatalogoDto> {
@@ -54,16 +50,26 @@ export class CatalogoService {
     });
   }
 
-  deleteId(id: number): Observable<number> {
+  removerSistema() {
     const userId = this.cls.get('userId');
-    return defer(() =>
-      from(
-        this.catalogoRepository.softDelete({
-          id: id,
-          userId: userId,
-        }),
-      ),
-    ).pipe(map(({ affected }) => affected));
+    return this.catalogoRepository.delete({
+      sistema: true,
+      userId: userId,
+    });
+  }
+
+  deleteId(id: number): Promise<number> {
+    const userId = this.cls.get('userId');
+    return firstValueFrom(
+      defer(() =>
+        from(
+          this.catalogoRepository.softDelete({
+            id: id,
+            userId: userId,
+          }),
+        ),
+      ).pipe(map(({ affected }) => affected)),
+    );
   }
 
   async update(

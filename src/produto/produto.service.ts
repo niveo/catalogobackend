@@ -39,8 +39,16 @@ export class ProdutoService {
     return this.produtoRepository.save(createProdutoDto);
   }
 
-  createMany(createProdutoDto: CreateProdutoDto[]) {
+  createMany(createProdutoDto: CreateProdutoDto[]): Promise<ProdutoDto[]> {
     return this.produtoRepository.save(createProdutoDto);
+  }
+
+  removerSistema() {
+    const userId = this.cls.get('userId');
+    return this.produtoRepository.delete({
+      sistema: true,
+      userId: userId,
+    });
   }
 
   async getId(id: number): Promise<ProdutoDto> {
