@@ -1,7 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
-import { BaseEntity } from './../model/base-entity';
 import { CatalogoPagina } from './catalogo-pagina.entity';
 import { Produto } from './produto.entity';
+import { BaseEntity } from './base-entity';
 
 @Entity()
 export class CatalogoPaginaMapeamento extends BaseEntity {
