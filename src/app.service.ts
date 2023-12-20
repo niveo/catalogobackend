@@ -20,11 +20,15 @@ export class AppService {
     private readonly config: ConfigService,
   ) {}
 
-  getUserId(): any {
+  getUserProfile(): any {
     return {
       userId: this.cls.get('userId'),
       teste: this.config.get<boolean>('ENV_TESTE'),
       vercel: this.config.get<boolean>('ENV_VERCEL'),
+      host: this.config.get('PGHOST'),
+      username: this.config.get('PGUSER'),
+      url: this.config.get('DATABASE_URL'),
+      database: this.config.get('PGDATABASE'),
     };
   }
 

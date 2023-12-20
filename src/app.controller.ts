@@ -1,8 +1,8 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthorizationGuard } from './authorization';
 
-//@ApiBearerAuth()
-//@UseGuards(AuthorizationGuard)
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
@@ -12,9 +12,11 @@ export class AppController {
     return this.appService.registeredUser(user_id);
   }
 
-  @Get('/userid')
+  @ApiBearerAuth()
+  @UseGuards(AuthorizationGuard)
+  @Get('/userprofile')
   getUserId(): Promise<any> {
-    return this.appService.getUserId();
+    return this.appService.getUserProfile();
   }
   @Get('/')
   getHello() {
