@@ -13,7 +13,7 @@ export class AppController {
   }
 
   @Get('/userid')
-  getUserId(): Promise<string> {
+  getUserId(): Promise<any> {
     return this.appService.getUserId();
   }
   @Get('/')

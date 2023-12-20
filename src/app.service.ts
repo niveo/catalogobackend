@@ -17,10 +17,15 @@ export class AppService {
     @Inject(ImageKit.name)
     private readonly imageKit: ImageKit,
     private readonly cls: ClsService,
+    private readonly config: ConfigService,
   ) {}
 
-  getUserId(): Promise<string> {
-    return this.cls.get('userId');
+  getUserId(): any {
+    return {
+      userId: this.cls.get('userId'),
+      teste: this.config.get<boolean>('ENV_TESTE'),
+      vercel: this.config.get<boolean>('ENV_VERCEL'),
+    };
   }
 
   async registeredUser(user_id: string) {
