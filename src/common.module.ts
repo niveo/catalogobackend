@@ -19,7 +19,9 @@ import { Produto } from './entities/produto.entity';
             // ClsMiddleware for all routes
             mount: true,
             setup: (cls, req) => {
-              if (configService.get<boolean>('ENV_TESTE')) {
+              const teste = configService.get<boolean>('ENV_TESTE');
+              console.log('envTeste: ' + teste);
+              if (teste) {
                 cls.set('userId', USER_ID_TEST.userId);
               } else if (req.headers['authorization']) {
                 const sub = jwtDecode(req.headers['authorization']).sub;
