@@ -23,13 +23,11 @@ import { USER_ID_TEST } from './common/constants/constant';
               if (envTest) {
                 cls.set('userId', USER_ID_TEST.userId);
               } else if (req.headers['authorization']) {
-                cls.set(
-                  'userId',
-                  uuidv5(
-                    jwtDecode(req.headers['authorization']).sub,
-                    configService.get('AUDIENCE'),
-                  ),
-                );
+                const sub = jwtDecode(req.headers['authorization']).sub;
+                const userId = uuidv5(sub, configService.get('AUDIENCE'));
+                console.log('Sub: ' + sub);
+                console.log('userId: ' + userId);
+                cls.set('userId', userId);
               }
             },
           },

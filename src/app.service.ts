@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import ImageKit from 'imagekit';
 import { v5 as uuidv5, v4 } from 'uuid';
 import catalogoData from '../data/catalogo.json';
 import produtoData from '../data/produtos.json';
 import { CatalogoService } from './catalogo/services/catalogo.service';
 import { ProdutoService } from './produto/produto.service';
-import ImageKit from 'imagekit';
 
 @Injectable()
 export class AppService {
