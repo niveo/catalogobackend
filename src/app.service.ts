@@ -55,15 +55,15 @@ export class AppService {
   async registeredUser(user_id: string) {
     const id = uuidv5(user_id, this.configService.get('AUDIENCE'));
 
+    console.log(
+      'Carregando dados basicos para o usuario: ' + user_id + ' / ' + id,
+    );
+
     await this.catalogoService.removerSistema();
     await this.produtoService.removerSistema();
 
     produtoData.forEach((f) => (f['userId'] = id));
-    await Promise.resolve(this.produtoService.createMany(produtoData))
-      .then((registros) =>
-        console.log(`Produtos importados ${registros.length}`),
-      )
-      .catch((error) => console.error(error));
+    await this.produtoService.createMany(produtoData);
 
     for (const catalogo of catalogoData) {
       catalogo['identificador'] = v4();
