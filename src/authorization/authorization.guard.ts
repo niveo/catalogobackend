@@ -19,7 +19,7 @@ export class AuthorizationGuard implements CanActivate {
   constructor(private readonly config: ConfigService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (this.config.get('ENV_TESTE')) {
+    if (this.config.get<boolean>('ENV_TESTE')) {
       return true;
     }
 
