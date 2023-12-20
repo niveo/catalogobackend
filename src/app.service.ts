@@ -27,7 +27,12 @@ export class AppService {
       vercel: this.config.get<boolean>('ENV_VERCEL'),
       host: this.config.get('PGHOST'),
       username: this.config.get('PGUSER'),
-      url: this.config.get('DATABASE_URL'),
+      url: this.config
+        .get('DATABASE_URL')
+        .replace(
+          this.config.get('PGPASSWORD'),
+          'X'.padEnd(this.config.get('PGPASSWORD').length, 'X'),
+        ),
       database: this.config.get('PGDATABASE'),
     };
   }
