@@ -5,19 +5,21 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import {
   auth,
   InvalidTokenError,
   UnauthorizedError,
 } from 'express-oauth2-jwt-bearer';
-import { envTest } from '../environments/environment';
 import { promisify } from 'util';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
+  constructor(private readonly config: ConfigService) {}
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (envTest) {
+    if (this.config.get('ENV_TESTE')) {
       return true;
     }
 

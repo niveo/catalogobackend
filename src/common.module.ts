@@ -4,10 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { jwtDecode } from 'jwt-decode';
 import { ClsModule, ClsModuleFactoryOptions } from 'nestjs-cls';
 import { v5 as uuidv5 } from 'uuid';
+import { USER_ID_TEST } from './common/constants/constant';
 import { Catalogo, CatalogoPagina, CatalogoPaginaMapeamento } from './entities';
 import { Produto } from './entities/produto.entity';
-import { envTest, envVercel } from './environments/environment';
-import { USER_ID_TEST } from './common/constants/constant';
 
 @Module({
   imports: [
@@ -20,7 +19,7 @@ import { USER_ID_TEST } from './common/constants/constant';
             // ClsMiddleware for all routes
             mount: true,
             setup: (cls, req) => {
-              if (envTest) {
+              if (configService.get('ENV_TESTE')) {
                 cls.set('userId', USER_ID_TEST.userId);
               } else if (req.headers['authorization']) {
                 const sub = jwtDecode(req.headers['authorization']).sub;
@@ -54,8 +53,8 @@ import { USER_ID_TEST } from './common/constants/constant';
             CatalogoPaginaMapeamento,
           ],
           //Setting synchronize: true shouldn't be used in production - otherwise you can lose production data.
-          synchronize: envTest,
-          ssl: envVercel,
+          synchronize: config.get('ENV_TESTE'),
+          ssl: config.get('ENV_VERCEL'),
           logging: false,
         };
       },
