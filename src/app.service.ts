@@ -20,11 +20,35 @@ export class AppService {
     private readonly config: ConfigService,
   ) {}
 
-  getUserId(): any {
+  getUserProfile(): any {
     return {
       userId: this.cls.get('userId'),
       teste: this.config.get<boolean>('ENV_TESTE'),
       vercel: this.config.get<boolean>('ENV_VERCEL'),
+      host: this.config.get('PGHOST'),
+      username: this.config.get('PGUSER'),
+      url: this.config
+        .get('DATABASE_URL')
+        .replace(
+          this.config.get('PGPASSWORD'),
+          'X'.padEnd(this.config.get('PGPASSWORD').length, 'X'),
+        ),
+      database: this.config.get('PGDATABASE'),
+      VERCEL_ENV: this.config.get('VERCEL_ENV'),
+      VERCEL_BRANCH_URL: this.config.get('VERCEL_BRANCH_URL'),
+      VERCEL_GIT_PROVIDER: this.config.get('VERCEL_GIT_PROVIDER'),
+      VERCEL_GIT_REPO_ID: this.config.get('VERCEL_GIT_REPO_ID'),
+      VERCEL_GIT_COMMIT_REF: this.config.get('VERCEL_GIT_COMMIT_REF'),
+      VERCEL_GIT_COMMIT_SHA: this.config.get('VERCEL_GIT_COMMIT_SHA'),
+      VERCEL_GIT_COMMIT_MESSAGE: this.config.get('VERCEL_GIT_COMMIT_MESSAGE'),
+      VERCEL_GIT_COMMIT_AUTHOR_LOGIN: this.config.get(
+        'VERCEL_GIT_COMMIT_AUTHOR_LOGIN',
+      ),
+      VERCEL_GIT_COMMIT_AUTHOR_NAME: this.config.get(
+        'VERCEL_GIT_COMMIT_AUTHOR_NAME',
+      ),
+      VERCEL_GIT_PREVIOUS_SHA: this.config.get('VERCEL_GIT_PREVIOUS_SHA'),
+      VERCEL_GIT_PULL_REQUEST_ID: this.config.get('VERCEL_GIT_PULL_REQUEST_ID'),
     };
   }
 

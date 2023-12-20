@@ -7,6 +7,7 @@ import { v5 as uuidv5 } from 'uuid';
 import { USER_ID_TEST } from './common/constants/constant';
 import { Catalogo, CatalogoPagina, CatalogoPaginaMapeamento } from './entities';
 import { Produto } from './entities/produto.entity';
+import { converterConfig } from './common/utils';
 
 @Module({
   imports: [
@@ -19,9 +20,7 @@ import { Produto } from './entities/produto.entity';
             // ClsMiddleware for all routes
             mount: true,
             setup: (cls, req) => {
-              const teste = configService.get<boolean>('ENV_TESTE');
-              console.log('envTeste: ' + teste);
-              if (teste) {
+              if (converterConfig(configService.get('ENV_TESTE'), Boolean)) {
                 cls.set('userId', USER_ID_TEST.userId);
               } else if (req.headers['authorization']) {
                 const sub = jwtDecode(req.headers['authorization']).sub;
@@ -55,8 +54,11 @@ import { Produto } from './entities/produto.entity';
             CatalogoPaginaMapeamento,
           ],
           //Setting synchronize: true shouldn't be used in production - otherwise you can lose production data.
-          synchronize: config.get<boolean>('ENV_TESTE'),
-          ssl: config.get<boolean>('ENV_VERCEL'),
+          synchronize: converterConfig(
+            config.get<boolean>('ENV_TESTE'),
+            Boolean,
+          ),
+          ssl: converterConfig(config.get<boolean>('ENV_VERCEL'), Boolean),
           logging: false,
         };
       },

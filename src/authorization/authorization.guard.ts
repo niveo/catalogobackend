@@ -12,6 +12,7 @@ import {
   InvalidTokenError,
   UnauthorizedError,
 } from 'express-oauth2-jwt-bearer';
+import { converterConfig } from '../common/utils';
 import { promisify } from 'util';
 
 @Injectable()
@@ -19,7 +20,7 @@ export class AuthorizationGuard implements CanActivate {
   constructor(private readonly config: ConfigService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (this.config.get<boolean>('ENV_TESTE')) {
+    if (converterConfig(this.config.get<boolean>('ENV_TESTE'), Boolean)) {
       return true;
     }
 
