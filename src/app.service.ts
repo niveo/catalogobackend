@@ -6,6 +6,7 @@ import catalogoData from '../data/catalogo.json';
 import produtoData from '../data/produtos.json';
 import { CatalogoService } from './catalogo/services/catalogo.service';
 import { ProdutoService } from './produto/produto.service';
+import { ClsService } from 'nestjs-cls';
 
 @Injectable()
 export class AppService {
@@ -15,7 +16,12 @@ export class AppService {
     private readonly produtoService: ProdutoService,
     @Inject(ImageKit.name)
     private readonly imageKit: ImageKit,
+    private readonly cls: ClsService,
   ) {}
+
+  getUserId(): Promise<string> {
+    return this.cls.get('userId');
+  }
 
   async registeredUser(user_id: string) {
     const id = uuidv5(user_id, this.configService.get('AUDIENCE'));

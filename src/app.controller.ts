@@ -12,6 +12,10 @@ export class AppController {
     return this.appService.registeredUser(user_id);
   }
 
+  @Get('/userid')
+  getUserId(): Promise<string> {
+    return this.appService.getUserId();
+  }
   @Get('/')
   getHello() {
     return 'Catalogo BackEnd';
