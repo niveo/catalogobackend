@@ -35,9 +35,9 @@ export class ProdutoService {
   }
 
   //Usuado para remover todos os dados do sistema para um novo importe
-  removerSistema() {
+  async removerSistema() {
     const userId = this.cls.get('userId');
-    return this.produtoRepository.delete({
+    return await this.produtoRepository.delete({
       sistema: true,
       userId: userId,
     });

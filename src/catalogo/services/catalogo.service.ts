@@ -51,9 +51,9 @@ export class CatalogoService {
   }
 
   //Usuado para remover todos os dados do sistema para um novo importe
-  removerSistema() {
+  async removerSistema() {
     const userId = this.cls.get('userId');
-    return this.catalogoRepository.delete({
+    return await this.catalogoRepository.delete({
       sistema: true,
       userId: userId,
     });
