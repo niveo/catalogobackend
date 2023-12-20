@@ -1,7 +1,11 @@
 export const converterConfig = (value, type) => {
-  console.log(value);
   if (type === Boolean) {
-    return value === 'true' || value === 1 || value;
+    if (typeof value === 'string') {
+      return value === 'true';
+    } else if (typeof value === 'number') {
+      return value === 1;
+    }
+    return value;
   }
   return true;
 };
