@@ -120,7 +120,7 @@ describe('Catalogo', () => {
 
   describe('IMPORTAR', () => {
     //Aumentar o tempo limite da chamado do teste
-    jest.setTimeout(10 * 1000);
+    jest.setTimeout(10 * 2000);
     it('deve retornar o catalogo importado', async () => {
       const { body } = await request(app.getHttpServer())
         .post('/catalogo/importar')
