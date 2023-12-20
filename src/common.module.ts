@@ -19,7 +19,7 @@ import { Produto } from './entities/produto.entity';
             // ClsMiddleware for all routes
             mount: true,
             setup: (cls, req) => {
-              if (configService.get('ENV_TESTE')) {
+              if (configService.get<boolean>('ENV_TESTE')) {
                 cls.set('userId', USER_ID_TEST.userId);
               } else if (req.headers['authorization']) {
                 const sub = jwtDecode(req.headers['authorization']).sub;
@@ -53,8 +53,8 @@ import { Produto } from './entities/produto.entity';
             CatalogoPaginaMapeamento,
           ],
           //Setting synchronize: true shouldn't be used in production - otherwise you can lose production data.
-          synchronize: config.get('ENV_TESTE'),
-          ssl: config.get('ENV_VERCEL'),
+          synchronize: config.get<boolean>('ENV_TESTE'),
+          ssl: config.get<boolean>('ENV_VERCEL'),
           logging: false,
         };
       },
