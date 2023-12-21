@@ -53,7 +53,7 @@ export class CatalogoPaginaMapeamentoController {
   getAll(
     @Query('idCatalogoPagina', ParseIntPipe) idCatalogoPagina: number,
   ): Promise<CatalogoPaginaMapeamentoDto[]> {
-    return this.service.getAll(idCatalogoPagina);
+    return this.service.getCatalogoPaginaMapeamento(idCatalogoPagina);
   }
 
   @ApiProduces(MediaType.APPLICATION_JSON)

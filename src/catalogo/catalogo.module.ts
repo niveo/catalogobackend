@@ -36,6 +36,10 @@ import { CatalogoService } from './services/catalogo.service';
     CatalogoPaginaMapeamentoService,
     ...imageKitProvider,
   ],
-  exports: [CatalogoService],
+  exports: [
+    CatalogoService,
+    CatalogoPaginaService,
+    CatalogoPaginaMapeamentoService,
+  ],
 })
 export class CatalogoModule {}
