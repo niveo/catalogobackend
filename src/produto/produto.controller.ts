@@ -78,7 +78,11 @@ export class ProdutoController {
     @Query('comCabecalho', ParseBoolPipe) comCabecalho: boolean,
     @Query('separador') separador: string,
   ) {
-    return this.service.importarProdutos(files, comCabecalho, separador);
+    return this.service.importarProdutos(
+      files[0].buffer,
+      comCabecalho,
+      separador,
+    );
   }
 
   @ApiProduces(MediaType.APPLICATION_JSON)
