@@ -219,7 +219,7 @@ export class MobileService {
     });
   }
 
-  removerArquivoTemporario(fileName) {
+  private removerArquivoTemporario(fileName) {
     console.log('Removendo arquivo %s', fileName);
 
     fs.access(fileName, (err) => {
