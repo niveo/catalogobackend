@@ -7,17 +7,52 @@ import {
 } from '../../dtos';
 import { Repository } from 'typeorm';
 import { CatalogoPaginaMapeamento } from '../../entities/catalogo-pagina-mapeamento.entity';
+import { ClsService } from 'nestjs-cls';
 
 @Injectable()
 export class CatalogoPaginaMapeamentoService {
   constructor(
     @InjectRepository(CatalogoPaginaMapeamento)
     private catalogoRepository: Repository<CatalogoPaginaMapeamento>,
+    private readonly cls: ClsService,
   ) {
     this.getMapeamentoProdutoCordenadas(1);
   }
 
-  async getAll(idCatalogo: number): Promise<CatalogoPaginaMapeamentoDto[]> {
+  async getCatalogoPaginaMapeamentoMobile(): Promise<any[]> {
+    const userId = this.cls.get('userId');
+    return this.catalogoRepository
+      .createQueryBuilder('catalogoPaginaMapeamento')
+      .select('catalogoPagina.id', 'catalogoPaginaId')
+      .addSelect('catalogoPaginaMapeamento.id', 'id')
+      .addSelect('catalogoPaginaMapeamento.inicialPosicalX', 'inicialPosicalX')
+      .addSelect('catalogoPaginaMapeamento.finalPosicalX', 'finalPosicalX')
+      .addSelect('catalogoPaginaMapeamento.inicialPosicalY', 'inicialPosicalY')
+      .addSelect('catalogoPaginaMapeamento.finalPosicalY', 'finalPosicalY')
+      .addSelect('catalogoPaginaMapeamento.width', 'width')
+      .addSelect('catalogoPaginaMapeamento.height', 'height')
+      .innerJoin('catalogoPaginaMapeamento.catalogoPagina', 'catalogoPagina')
+      .innerJoin('catalogoPagina.catalogo', 'catalogo')
+      .where('catalogo.userId = :userId', { userId: userId })
+      .getRawMany();
+  }
+
+  async getCatalogoPaginaMapeamentoProdutos(): Promise<any[]> {
+    const userId = this.cls.get('userId');
+    return this.catalogoRepository
+      .createQueryBuilder('catalogoPaginaMapeamento')
+      .select('catalogoPaginaMapeamento.id', 'catalogoPaginaMapeamentoId')
+      .addSelect('produtos.id', 'produtoId')
+      .innerJoin('catalogoPaginaMapeamento.produtos', 'produtos')
+      .innerJoin('catalogoPaginaMapeamento.catalogoPagina', 'catalogoPagina')
+      .innerJoin('catalogoPagina.catalogo', 'catalogo')
+      .where('catalogo.userId = :userId', { userId: userId })
+      .getRawMany();
+  }
+
+  async getCatalogoPaginaMapeamento(
+    idCatalogo: number,
+  ): Promise<CatalogoPaginaMapeamentoDto[]> {
     return this.catalogoRepository.find({
       where: {
         catalogoPagina: {

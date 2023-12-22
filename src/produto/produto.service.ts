@@ -84,12 +84,12 @@ export class ProdutoService {
   }
 
   async importarProdutos(
-    files: Express.Multer.File[],
+    files: Buffer,
     comCabecalho: boolean,
     separador = ';',
   ) {
     const userId = this.cls.get('userId');
-    const registros: any[] = await parse(files[0].buffer);
+    const registros: any[] = await parse(files);
     const mapeados = registros
       .map((e: any[], i: number) => {
         if (!(comCabecalho && i === 0)) {

@@ -18,6 +18,7 @@ export class AppController {
   getUserId(): Promise<any> {
     return this.appService.getUserProfile();
   }
+
   @Get('/')
   getHello() {
     return 'Catalogo BackEnd';

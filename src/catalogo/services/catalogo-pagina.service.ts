@@ -7,15 +7,33 @@ import {
   UpdateCatalogoPaginaDto,
 } from '../../dtos';
 import { CatalogoPagina } from '../../entities/catalogo-pagina.entity';
+import { ClsService } from 'nestjs-cls';
 
 @Injectable()
 export class CatalogoPaginaService {
   constructor(
     @InjectRepository(CatalogoPagina)
     private readonly catalogoRepository: Repository<CatalogoPagina>,
+    private readonly cls: ClsService,
   ) {}
 
-  async getAll(idCatalogo: number): Promise<CatalogoPaginaDto[]> {
+  async getCatalogoPaginaMobile(): Promise<any[]> {
+    const userId = this.cls.get('userId');
+    return this.catalogoRepository
+      .createQueryBuilder('catalogoPagina')
+      .select('catalogo.id', 'catalogoId')
+      .addSelect('catalogoPagina.id', 'id')
+      .addSelect('catalogoPagina.pagina', 'pagina')
+      .addSelect('catalogoPagina.size', 'size')
+      .addSelect('catalogoPagina.height', 'height')
+      .addSelect('catalogoPagina.width', 'width')
+      .addSelect('catalogoPagina.name', 'name')
+      .innerJoin('catalogoPagina.catalogo', 'catalogo')
+      .where('catalogo.userId = :userId', { userId: userId })
+      .getRawMany();
+  }
+
+  async getPaginasCatalogo(idCatalogo: number): Promise<CatalogoPaginaDto[]> {
     return this.catalogoRepository.find({
       where: {
         catalogo: {

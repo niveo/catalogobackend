@@ -53,7 +53,7 @@ export class CatalogoPaginaController {
   getAll(
     @Query('idCatalogo', ParseIntPipe) idCatalogo: number,
   ): Promise<CatalogoPaginaDto[]> {
-    return this.service.getAll(idCatalogo);
+    return this.service.getPaginasCatalogo(idCatalogo);
   }
 
   @ApiOperation({ summary: 'Carregar registro por id' })
