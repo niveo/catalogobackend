@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { jwtDecode } from 'jwt-decode';
 import { ClsModule, ClsModuleFactoryOptions } from 'nestjs-cls';
 import { v5 as uuidv5 } from 'uuid';
 import { USER_ID_TEST } from './common/constants/constant';
+import { converterConfig } from './common/utils';
 import { Catalogo, CatalogoPagina, CatalogoPaginaMapeamento } from './entities';
 import { Produto } from './entities/produto.entity';
-import { converterConfig } from './common/utils';
 
 @Module({
   imports: [
@@ -22,11 +21,11 @@ import { converterConfig } from './common/utils';
             setup: (cls, req) => {
               if (converterConfig(configService.get('ENV_TESTE'), Boolean)) {
                 cls.set('userId', USER_ID_TEST.userId);
-              } else if (req.headers['authorization']) {
-                const sub = jwtDecode(req.headers['authorization']).sub;
-                const userId = uuidv5(sub, configService.get('AUDIENCE'));
-                console.log('Sub: ' + sub);
-                console.log('userId: ' + userId);
+              } else if (req.headers['userid']) {
+                const userId = uuidv5(
+                  req.headers['userid'],
+                  configService.get('AUDIENCE'),
+                );
                 cls.set('userId', userId);
               }
             },
