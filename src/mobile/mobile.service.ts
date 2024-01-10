@@ -30,6 +30,71 @@ export class MobileService {
 
       await this.inserirRegistros(
         db,
+        'CREATE TABLE mapeamentoTabela (id INTEGER, tabela TEXT, sequencia INTEGER, versao INTEGER)',
+        'INSERT INTO mapeamentoTabela VALUES (?,?,?,?)',
+        [
+          { id: 1, tabela: 'produto', sequencia: 1, versao: 1 },
+          { id: 2, tabela: 'catalogo', sequencia: 2, versao: 1 },
+          { id: 3, tabela: 'catalogo_pagina', sequencia: 3, versao: 1 },
+          {
+            id: 4,
+            tabela: 'catalogo_pagina_mapeamento',
+            sequencia: 4,
+            versao: 1,
+          },
+          {
+            id: 5,
+            tabela: 'catalogo_pagina_mapeamento_produtos_produto',
+            sequencia: 5,
+            versao: 1,
+          },
+        ],
+        ['id', 'tabela', 'sequencia', 'versao'],
+      );
+
+      await this.inserirRegistros(
+        db,
+        'CREATE TABLE mapeamentoCampos (id INTEGER, campo TEXT, versao INTEGER)',
+        'INSERT INTO mapeamentoCampos VALUES (?,?,?)',
+        [
+          { id: 1, campo: 'id', versao: 1 },
+          { id: 1, campo: 'descricao', versao: 1 },
+          { id: 1, campo: 'referencia', versao: 1 },
+          { id: 1, campo: 'ativo', versao: 1 },
+
+          { id: 2, campo: 'id', versao: 1 },
+          { id: 2, campo: 'descricao', versao: 1 },
+          { id: 2, campo: 'titulo', versao: 1 },
+          { id: 2, campo: 'logo', versao: 1 },
+          { id: 2, campo: 'avatar', versao: 1 },
+          { id: 2, campo: 'ativo', versao: 1 },
+          { id: 2, campo: 'identificador', versao: 2 },
+
+          { id: 3, campo: 'id', versao: 1 },
+          { id: 3, campo: 'pagina', versao: 1 },
+          { id: 3, campo: 'size', versao: 1 },
+          { id: 3, campo: 'height', versao: 1 },
+          { id: 3, campo: 'width', versao: 1 },
+          { id: 3, campo: 'name', versao: 1 },
+          { id: 3, campo: 'catalogoId', versao: 1 },
+
+          { id: 4, campo: 'id', versao: 1 },
+          { id: 4, campo: 'inicialPosicalX', versao: 1 },
+          { id: 4, campo: 'finalPosicalX', versao: 1 },
+          { id: 4, campo: 'inicialPosicalY', versao: 1 },
+          { id: 4, campo: 'finalPosicalY', versao: 1 },
+          { id: 4, campo: 'width', versao: 1 },
+          { id: 4, campo: 'height', versao: 1 },
+          { id: 4, campo: 'catalogoPaginaId', versao: 1 },
+
+          { id: 5, campo: 'catalogoPaginaMapeamentoId', versao: 1 },
+          { id: 5, campo: 'produtoId', versao: 1 },
+        ],
+        ['id', 'campo', 'versao'],
+      );
+
+      await this.inserirRegistros(
+        db,
         'CREATE TABLE produto (id INTEGER, descricao TEXT, referencia TEXT, ativo Boolean)',
         'INSERT INTO produto VALUES (?,?,?,?)',
         await this.produtoService.getAll(),
@@ -38,10 +103,18 @@ export class MobileService {
 
       await this.inserirRegistros(
         db,
-        'CREATE TABLE catalogo (id INTEGER, descricao TEXT, titulo TEXT, logo TEXT, avatar TEXT, ativo Boolean)',
-        'INSERT INTO catalogo VALUES (?,?,?,?,?,?)',
+        'CREATE TABLE catalogo (id INTEGER, descricao TEXT, titulo TEXT, logo TEXT, avatar TEXT, ativo Boolean, identificador TEXT)',
+        'INSERT INTO catalogo VALUES (?,?,?,?,?,?,?)',
         await this.catalogoservice.getAll(),
-        ['id', 'descricao', 'titulo', 'logo', 'avatar', 'ativo'],
+        [
+          'id',
+          'descricao',
+          'titulo',
+          'logo',
+          'avatar',
+          'ativo',
+          'identificador',
+        ],
       );
 
       await this.inserirRegistros(
@@ -222,7 +295,7 @@ export class MobileService {
   private removerArquivoTemporario(fileName) {
     console.log('Removendo arquivo %s', fileName);
 
-    fs.access(fileName, (err) => {
+    /*fs.access(fileName, (err) => {
       if (err) {
         console.error(err);
         return;
@@ -233,6 +306,6 @@ export class MobileService {
           return;
         }
       });
-    });
+    });*/
   }
 }
