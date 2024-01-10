@@ -26,6 +26,9 @@ export class Produto extends BaseEntity {
   @Column('boolean', { default: false })
   ativo: boolean = false;
 
+  @Column('decimal', { default: 0 })
+  valor: number = 0.0;
+
   //Campo criado para deixar um registro base para novos usuários
   @Exclude()
   @Column('boolean', { default: false })

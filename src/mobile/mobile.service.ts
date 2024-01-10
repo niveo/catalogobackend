@@ -61,6 +61,7 @@ export class MobileService {
           { id: 1, campo: 'descricao', versao: 1 },
           { id: 1, campo: 'referencia', versao: 1 },
           { id: 1, campo: 'ativo', versao: 1 },
+          { id: 1, campo: 'valor', versao: 1 },
 
           { id: 2, campo: 'id', versao: 1 },
           { id: 2, campo: 'descricao', versao: 1 },
@@ -95,10 +96,10 @@ export class MobileService {
 
       await this.inserirRegistros(
         db,
-        'CREATE TABLE produto (id INTEGER, descricao TEXT, referencia TEXT, ativo Boolean)',
-        'INSERT INTO produto VALUES (?,?,?,?)',
+        'CREATE TABLE produto (id INTEGER, descricao TEXT, referencia TEXT, ativo Boolean, valor DECIMAL)',
+        'INSERT INTO produto VALUES (?,?,?,?,?)',
         await this.produtoService.getAll(),
-        ['id', 'descricao', 'referencia', 'ativo'],
+        ['id', 'descricao', 'referencia', 'ativo', 'valor'],
       );
 
       await this.inserirRegistros(

@@ -22,4 +22,5 @@ export default new DataSource({
   entities: [Produto, Catalogo, CatalogoPagina, CatalogoPaginaMapeamento],
   migrations: ['src/db/migrations/*{.ts,.js}'],
   migrationsTableName: 'migrations',
+ // ssl: true
 });
