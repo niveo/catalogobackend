@@ -261,7 +261,7 @@ export class MobileService {
             if (error) throw error;
           });
 
-          console.info('Registros: ' + registros.length);
+          console.info(`${prepare} registros: ${registros.length}`);
           registros.forEach((registro) => {
             const valores = keys.map((key) => registro[key]);
             stmt.run(valores, (error) => {
