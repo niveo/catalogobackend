@@ -261,7 +261,7 @@ export class MobileService {
             if (error) throw error;
           });
 
-          console.info('Registros: ' + registros.length);
+          console.info(`${prepare} registros: ${registros.length}`);
           registros.forEach((registro) => {
             const valores = keys.map((key) => registro[key]);
             stmt.run(valores, (error) => {
@@ -295,8 +295,7 @@ export class MobileService {
 
   private removerArquivoTemporario(fileName) {
     console.log('Removendo arquivo %s', fileName);
-
-    /*fs.access(fileName, (err) => {
+    fs.access(fileName, (err) => {
       if (err) {
         console.error(err);
         return;
@@ -307,6 +306,6 @@ export class MobileService {
           return;
         }
       });
-    });*/
+    });
   }
 }
